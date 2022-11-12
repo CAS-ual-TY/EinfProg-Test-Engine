@@ -41,6 +41,8 @@ public class Util
     
     public static boolean isDouble(String s)
     {
+        // according to Double#parseDouble docs
+        
         final String Digits = "(\\p{Digit}+)";
         final String HexDigits = "(\\p{XDigit}+)";
         // an exponent is 'e' or 'E' followed by an optionally

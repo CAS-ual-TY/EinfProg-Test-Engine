@@ -5,12 +5,9 @@ import org.junit.jupiter.api.Assertions;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
-import java.util.Random;
 
 public class Engine
 {
-    public static final String NEWLINE = "\n";
-    public static final Random RANDOM = new Random(0);
     public static final Engine ENGINE = new Engine();
     
     public static final PrintStream SYS_OUT = System.out;
@@ -26,7 +23,7 @@ public class Engine
         initialized = false;
     }
     
-    public void beforeAll()
+    private void beforeAll()
     {
         // formatting %f could result in commas as decimal points (instead of dots)
         Locale.setDefault(Locale.US);
@@ -42,8 +39,6 @@ public class Engine
         
         userOut = new ByteArrayOutputStream();
         System.setOut(new PrintStream(userOut));
-        
-        RANDOM.setSeed(42);
     }
     
     private void afterEach()
@@ -57,7 +52,7 @@ public class Engine
         System.setIn(new ByteArrayInputStream((String.join("\n", input) + "\n" + "0\n".repeat(100)).getBytes(StandardCharsets.UTF_8)));
     }
     
-    public String getRawOutput()
+    private String getRawOutput()
     {
         return userOut.toString();
     }

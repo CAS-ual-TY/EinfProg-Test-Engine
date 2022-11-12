@@ -1,10 +1,13 @@
 # EinfProg-Test-Engine
+
 A lot of examples in the test source folder.
 
 ## Example Error Messages
+
 All examples can be found in the `Bsp01TestFail` class.
 
 ### Mismatched String
+
 ```-
 org.opentest4j.AssertionFailedError: Wrong output detected!
 ==================================================
@@ -32,6 +35,7 @@ With the following input:
 ```
 
 ### Wrong Result Value
+
 ```-
 org.opentest4j.AssertionFailedError: Wrong output detected!
 ==================================================
@@ -61,6 +65,7 @@ With the following input:
 ```
 
 ### Entire Output Line Missing
+
 ```-
 org.opentest4j.AssertionFailedError: Wrong output detected!
 ==================================================
@@ -98,6 +103,7 @@ With the following input:
 ```
 
 ### Exception Thrown
+
 ```-
 java.lang.RuntimeException: ERROR == 4
   at einfprog.Bsp01TestFail.testRun(Bsp01TestFail.java:43)
