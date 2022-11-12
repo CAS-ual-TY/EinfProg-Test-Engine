@@ -12,9 +12,11 @@ public class Bsp01TestFail
 {
     // 1: mismatched string
     // 2: value slightly off
-    public static final int ERROR = 1;
+    // 3: missing entire output
+    // 4: throw exception
+    public static final int ERROR = 4;
     
-    private final Runnable testRun = () ->
+    private void testRun()
     {
         System.out.print("? Verbrauch 100km[l]: ");
         double verbrauchPro100km = SavitchIn.readLineDouble();
@@ -36,6 +38,11 @@ public class Bsp01TestFail
         double stromverbrauchPro100km = SavitchIn.readLineDouble();
         System.out.println();
         
+        if(ERROR == 4)
+        {
+            throw new RuntimeException("ERROR ==" + ERROR);
+        }
+        
         System.out.print("? Strompreis pro kWh[Euro]: ");
         double strompreisPro1kWh = SavitchIn.readLineDouble();
         System.out.println();
@@ -43,9 +50,12 @@ public class Bsp01TestFail
         double stromkostenPro100km = stromverbrauchPro100km * strompreisPro1kWh;
         System.out.println("Kosten pro 100km[Euro] = " + stromkostenPro100km);
         
-        double verhaeltnis = stromkostenPro100km / kostenPro100km;
-        System.out.println("Verhältnis S/D = " + verhaeltnis);
-    };
+        if(ERROR != 3)
+        {
+            double verhaeltnis = stromkostenPro100km / kostenPro100km;
+            System.out.println("Verhältnis S/D = " + verhaeltnis);
+        }
+    }
     
     @Test
     public void testWithError() throws IOException
@@ -60,7 +70,7 @@ public class Bsp01TestFail
         
         double verhaeltnis = stromkostenPro100km / kostenPro100km;
         
-        AtomTest t = new AtomTest(testRun,
+        AtomTest t = new AtomTest(this::testRun,
                 new Atom[] {
                         Atom.doubleAtom(verbrauchPro100km),
                         Atom.doubleAtom(dieselpreisPro1L),
