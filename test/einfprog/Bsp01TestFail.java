@@ -40,7 +40,7 @@ public class Bsp01TestFail
         
         if(ERROR == 4)
         {
-            throw new RuntimeException("ERROR ==" + ERROR);
+            throw new RuntimeException("ERROR == " + ERROR);
         }
         
         System.out.print("? Strompreis pro kWh[Euro]: ");
