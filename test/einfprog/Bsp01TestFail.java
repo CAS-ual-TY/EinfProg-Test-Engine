@@ -1,7 +1,9 @@
 package einfprog;
 
-import einfprog.SavitchIn;
-import einfprog.test_engine.*;
+import einfprog.test_engine.Atom;
+import einfprog.test_engine.AtomTest;
+import einfprog.test_engine.Compound;
+import einfprog.test_engine.Engine;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
