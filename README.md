@@ -2,9 +2,16 @@
 
 A lot of examples in the test source folder.
 
+## Usage Examples
+
+- `Bsp01Test` class contains basic examples
+- `Bsp01TestQuick` class contains examples using convenience methods
+- `Bsp02Test` class contains examples using the builder methods (also for convenience)
+- `Bsp02TestRegex` class contains examples using RegEx
+
 ## Example Error Messages
 
-All examples can be found in the `Bsp01TestFail` class.
+Most examples can be found in the `Bsp01TestFail` class.
 
 ### Mismatched String
 
@@ -113,4 +120,51 @@ java.lang.RuntimeException: ERROR == 4
   at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
   at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
   ...
+```
+
+### RegEx Mismatch
+
+```-
+org.opentest4j.AssertionFailedError: Wrong output detected!
+==================================================
+Expected:
+  (This is to be done:)
+--------------------------------------------------
+? Erreichte Punkte:
+Nicht Genügend (5)
+? Anzahl der Teilnehmer:
+? Note [1-5]: 
+? Note [1-5]: 
+? Note [1-5]: 
+? Note [1-5]: 
+? Note [1-5]: 
+4/5 Teilnehmer haben bestanden.
+1/5 Teilnehmer haben nicht bestanden.
+0/5 Teilnehmer haben eine ungültige Bewertung.
+==================================================
+Found:
+  (This is your output:)
+--------------------------------------------------
+? Erreichte TYPING_ERROR_HERE Punkte [0-120]: 
+Nicht Gengügend (5)
+? Anzahl der Teilnehmer: 
+? Note [1-5]: 
+? Note [1-5]: 
+? Note [1-5]: 
+? Note [1-5]: 
+? Note [1-5]: 
+4/5 Teilnehmer haben bestanden.
+1/5 Teilnehmer haben nicht bestanden.
+0/5 Teilnehmer haben eine ungültige Beurteilung.
+==================================================
+With the following input:
+--------------------------------------------------
+0
+5
+1
+2
+3
+4
+5
+==================================================
 ```
