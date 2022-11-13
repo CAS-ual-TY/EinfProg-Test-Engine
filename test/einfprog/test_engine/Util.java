@@ -4,51 +4,17 @@ import java.util.regex.Pattern;
 
 public class Util
 {
-    public static String removeFakeSpace(String s)
-    {
-        return s.replaceAll("[^\\S\\r\\n]", " ");
-    }
+    public static final String DOUBLE_REGEX;
     
-    public static String removeMultiSpace(String s)
-    {
-        return s.replaceAll("( )( )+", " ");
-    }
-    
-    public static String removeCR(String s)
-    {
-        return s.replaceAll("\r", "");
-    }
-    
-    public static String removeMultiNewlines(String s)
-    {
-        return s.replaceAll("\n[\n ]*\n", "\n");
-    }
-    
-    public static String prepareString(String s)
-    {
-        return removeMultiNewlines(removeMultiSpace(removeFakeSpace(removeCR(s))));
-    }
-    
-    public static String[] prepareOutput(String rawOutput)
-    {
-        return prepareString(rawOutput).split("\n");
-    }
-    
-    public static boolean isInt(String s)
-    {
-        return s.matches("[\\+-]?[1-9][0-9]*");
-    }
-    
-    public static boolean isDouble(String s)
+    static
     {
         // according to Double#parseDouble docs
-        
         final String Digits = "(\\p{Digit}+)";
         final String HexDigits = "(\\p{XDigit}+)";
         // an exponent is 'e' or 'E' followed by an optionally
         // signed decimal integer.
         final String Exp = "[eE][+-]?" + Digits;
-        final String fpRegex =
+        DOUBLE_REGEX =
                 ("[\\x00-\\x20]*" +  // Optional leading "whitespace"
                         "[+-]?(" + // Optional sign character
                         "NaN|" +           // "NaN" string
@@ -81,7 +47,45 @@ public class Util
                         ")[pP][+-]?" + Digits + "))" +
                         "[fFdD]?))" +
                         "[\\x00-\\x20]*");// Optional trailing "whitespace"
-        
-        return Pattern.matches(fpRegex, s);
+    }
+    
+    public static String removeFakeSpace(String s)
+    {
+        return s.replaceAll("[^\\S\\r\\n]", " ");
+    }
+    
+    public static String removeMultiSpace(String s)
+    {
+        return s.replaceAll("( )( )+", " ");
+    }
+    
+    public static String removeCR(String s)
+    {
+        return s.replaceAll("\r", "");
+    }
+    
+    public static String removeMultiNewlines(String s)
+    {
+        return s.replaceAll("\n[\n ]*\n", "\n");
+    }
+    
+    public static String prepareString(String s)
+    {
+        return removeMultiNewlines(removeMultiSpace(removeFakeSpace(removeCR(s))));
+    }
+    
+    public static String[] prepareOutput(String rawOutput)
+    {
+        return prepareString(rawOutput).split("\n");
+    }
+    
+    public static boolean isInt(String s)
+    {
+        return s.matches("[+-]?[1-9][0-9]*");
+    }
+    
+    public static boolean isDouble(String s)
+    {
+        return Pattern.matches(DOUBLE_REGEX, s);
     }
 }

@@ -7,6 +7,7 @@ import einfprog.test_engine.Engine;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Bsp02Test
 {
@@ -89,29 +90,9 @@ public class Bsp02Test
                 
                 int teilnehmer = noten.length;
                 
-                int positiv = 0;
-                int negativ = 0;
-                int ungueltig = 0;
-                
-                for(int note2 : noten)
-                {
-                    if(note2 < 1)
-                    {
-                        ungueltig = ungueltig + 1;
-                    }
-                    else if(note2 < 5)
-                    {
-                        positiv = positiv + 1;
-                    }
-                    else if(note2 == 5)
-                    {
-                        negativ = negativ + 1;
-                    }
-                    else
-                    {
-                        ungueltig = ungueltig + 1;
-                    }
-                }
+                int positiv = (int) Arrays.stream(noten).filter(n -> n > 0 && n < 5).count();
+                int negativ = (int) Arrays.stream(noten).filter(n -> n == 5).count();
+                int ungueltig = noten.length - positiv - negativ;
                 
                 AtomTest t = new AtomTest(() -> Bsp02.main(new String[] {}),
                         Atom.builder()

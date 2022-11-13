@@ -31,11 +31,8 @@ public class AtomTest extends AbstractTest
     {
         String[] outputLines = Util.prepareOutput(rawOutput);
         
-        LinkedList<Compound> compounds = new LinkedList<>();
-        Arrays.stream(lines).forEach(compounds::add);
-        
-        LinkedList<String> lines = new LinkedList<>();
-        Arrays.stream(outputLines).forEach(lines::add);
+        LinkedList<Compound> compounds = new LinkedList<>(Arrays.asList(lines));
+        LinkedList<String> lines = new LinkedList<>(Arrays.asList(outputLines));
         
         // make sure there is no IndexOutOfBoundsException
         for(int i = 0; i < 100; i++)
