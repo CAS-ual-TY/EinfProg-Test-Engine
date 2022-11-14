@@ -2,21 +2,30 @@ package einfprog.test_engine;
 
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.function.BiPredicate;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RegexTest extends AbstractTest
 {
     private String regex;
-    private String expected;
+    private Supplier<String> expected;
+    private BiPredicate<Pattern, Matcher> valueTest;
     private String[] input;
     
-    public RegexTest(Runnable test, String regex, String expected, String... input)
+    public RegexTest(Runnable test, String regex, Supplier<String> expected, BiPredicate<Pattern, Matcher> valueTest, String... input)
     {
         super(test);
         this.regex = regex;
         this.expected = expected;
+        this.valueTest = valueTest;
         this.input = input;
+    }
+    
+    public RegexTest(Runnable test, String regex, Supplier<String> expected, String... input)
+    {
+        this(test, regex, expected, (pattern, matcher) -> true, input);
     }
     
     @Override
@@ -31,7 +40,7 @@ public class RegexTest extends AbstractTest
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(rawOutput);
         
-        if(!matcher.find())
+        if(!matcher.find() || !valueTest.test(pattern, matcher))
         {
             printError(errorCallback, rawOutput);
             return false;
@@ -42,6 +51,8 @@ public class RegexTest extends AbstractTest
     
     protected void printError(PrintWriter errorCallback, String rawOutput)
     {
+        String expected = this.expected.get();
+        
         errorCallback.println("Wrong output detected!");
         errorCallback.println("=".repeat(AtomTest.LINE_LENGTH));
         

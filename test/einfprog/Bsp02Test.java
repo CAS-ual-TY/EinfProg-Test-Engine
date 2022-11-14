@@ -11,33 +11,34 @@ import java.util.Arrays;
 
 public class Bsp02Test
 {
+    private String note(int punkte)
+    {
+        if(punkte < 60)
+        {
+            return "Nicht Genügend (5)";
+        }
+        if(punkte < 75)
+        {
+            return "Genügend (4)";
+        }
+        if(punkte < 90)
+        {
+            return "Befriedigend (3)";
+        }
+        if(punkte < 105)
+        {
+            return "Gut (2)";
+        }
+        
+        return "Sehr Gut (1)";
+    }
+    
     @Test
     public void test1() throws IOException
     {
         for(int punkte = 0; punkte <= 120; punkte++)
         {
-            String note;
-            
-            if(punkte < 60)
-            {
-                note = "Nicht Genügend (5)";
-            }
-            else if(punkte < 75)
-            {
-                note = "Genügend (4)";
-            }
-            else if(punkte < 90)
-            {
-                note = "Befriedigend (3)";
-            }
-            else if(punkte < 105)
-            {
-                note = "Gut (2)";
-            }
-            else
-            {
-                note = "Sehr Gut (1)";
-            }
+            String note = note(punkte);
             
             AtomTest t = new AtomTest(() -> Bsp02.main(new String[] {}),
                     Atom.construct(punkte),
@@ -65,28 +66,7 @@ public class Bsp02Test
         {
             for(int punkte = 0; punkte <= 120; punkte += 5)
             {
-                String note;
-                
-                if(punkte < 60)
-                {
-                    note = "Nicht Genügend (5)";
-                }
-                else if(punkte < 75)
-                {
-                    note = "Genügend (4)";
-                }
-                else if(punkte < 90)
-                {
-                    note = "Befriedigend (3)";
-                }
-                else if(punkte < 105)
-                {
-                    note = "Gut (2)";
-                }
-                else
-                {
-                    note = "Sehr Gut (1)";
-                }
+                String note = note(punkte);
                 
                 int teilnehmer = noten.length;
                 

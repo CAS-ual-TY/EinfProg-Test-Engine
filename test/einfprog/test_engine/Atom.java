@@ -138,9 +138,7 @@ public abstract class Atom
                 return false;
             }
             
-            double number = Double.parseDouble(numberString);
-            
-            return Math.abs(number - atom) <= error;
+            return Util.doubleEquals(atom, Double.parseDouble(numberString), error);
         }
         
         @Override

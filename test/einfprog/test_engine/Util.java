@@ -1,10 +1,12 @@
 package einfprog.test_engine;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Util
 {
     public static final String DOUBLE_REGEX;
+    public static final String INT_REGEX = "[+-]?[1-9][0-9]*";
     
     static
     {
@@ -14,7 +16,7 @@ public class Util
         // an exponent is 'e' or 'E' followed by an optionally
         // signed decimal integer.
         final String Exp = "[eE][+-]?" + Digits;
-        DOUBLE_REGEX =
+        DOUBLE_REGEX = "(" +
                 ("[\\x00-\\x20]*" +  // Optional leading "whitespace"
                         "[+-]?(" + // Optional sign character
                         "NaN|" +           // "NaN" string
@@ -46,7 +48,8 @@ public class Util
                         
                         ")[pP][+-]?" + Digits + "))" +
                         "[fFdD]?))" +
-                        "[\\x00-\\x20]*");// Optional trailing "whitespace"
+                        "[\\x00-\\x20]*")// Optional trailing "whitespace"
+                + ")";
     }
     
     public static String removeFakeSpace(String s)
@@ -81,11 +84,33 @@ public class Util
     
     public static boolean isInt(String s)
     {
-        return s.matches("[+-]?[1-9][0-9]*");
+        return s.matches(INT_REGEX);
     }
     
     public static boolean isDouble(String s)
     {
         return Pattern.matches(DOUBLE_REGEX, s);
+    }
+    
+    public static boolean doubleEquals(double x, double y, double error)
+    {
+        return Math.abs(x - y) < error;
+    }
+    
+    public static boolean doubleEquals(double x, double y)
+    {
+        return doubleEquals(x, y, Atom.DEFAULT_DOUBLE_ERROR);
+    }
+    
+    public static boolean intEquals(Matcher matcher, String groupName, int value)
+    {
+        String s = matcher.group(groupName).trim();
+        return isInt(s) && value == Integer.parseInt(s);
+    }
+    
+    public static boolean doubleEquals(Matcher matcher, String groupName, double value)
+    {
+        String s = matcher.group(groupName).trim();
+        return isDouble(s) && doubleEquals(value, Double.parseDouble(s));
     }
 }

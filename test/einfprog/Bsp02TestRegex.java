@@ -10,44 +10,42 @@ import java.util.stream.Collectors;
 
 public class Bsp02TestRegex
 {
+    private String note(int punkte)
+    {
+        if(punkte < 60)
+        {
+            return "Nicht Genügend (5)";
+        }
+        if(punkte < 75)
+        {
+            return "Genügend (4)";
+        }
+        if(punkte < 90)
+        {
+            return "Befriedigend (3)";
+        }
+        if(punkte < 105)
+        {
+            return "Gut (2)";
+        }
+        
+        return "Sehr Gut (1)";
+    }
+    
     @Test
     public void test1() throws IOException
     {
         for(int punkte = 0; punkte <= 120; punkte++)
         {
-            String note;
-            
-            if(punkte < 60)
-            {
-                note = "Nicht Genügend (5)";
-            }
-            else if(punkte < 75)
-            {
-                note = "Genügend (4)";
-            }
-            else if(punkte < 90)
-            {
-                note = "Befriedigend (3)";
-            }
-            else if(punkte < 105)
-            {
-                note = "Gut (2)";
-            }
-            else
-            {
-                note = "Sehr Gut (1)";
-            }
-            
-            String expected = "? Erreichte Punkte [0-120]: ";
+            String note = note(punkte);
+            String noteRegex = note
+                    .replace(" ", "\\s*")
+                    .replace("(", "\\(")
+                    .replace(")", "\\)");
             
             RegexTest t = new RegexTest(() -> Bsp02.main(new String[] {}),
-                    "\\s*\\?? Erreichte Punkte\\s*\\[0[-–—]120]\\s*:\\s*%s\\s*"
-                            .formatted(note
-                                    .replace(" ", "\\s*")
-                                    .replace("(", "\\(")
-                                    .replace(")", "\\)")
-                            ),
-                    expected,
+                    "\\s*\\?? Erreichte Punkte\\s*\\[0[-–—]120]\\s*:\\s*" + noteRegex + "\\s*",
+                    () -> "? Erreichte Punkte [0-120]: ",
                     String.valueOf(punkte)
             );
             
@@ -71,28 +69,11 @@ public class Bsp02TestRegex
         {
             for(int punkte = 0; punkte <= 120; punkte += 5)
             {
-                String note;
-                
-                if(punkte < 60)
-                {
-                    note = "Nicht Genügend (5)";
-                }
-                else if(punkte < 75)
-                {
-                    note = "Genügend (4)";
-                }
-                else if(punkte < 90)
-                {
-                    note = "Befriedigend (3)";
-                }
-                else if(punkte < 105)
-                {
-                    note = "Gut (2)";
-                }
-                else
-                {
-                    note = "Sehr Gut (1)";
-                }
+                String note = note(punkte);
+                String noteRegex = note
+                        .replace(" ", "\\s*")
+                        .replace("(", "\\(")
+                        .replace(")", "\\)");
                 
                 int teilnehmer = noten.length;
                 
@@ -100,23 +81,8 @@ public class Bsp02TestRegex
                 int negativ = (int) Arrays.stream(noten).filter(n -> n == 5).count();
                 int ungueltig = noten.length - positiv - negativ;
                 
-                String expected = ("""
-                        ? Erreichte Punkte:
-                        %s
-                        ? Anzahl der Teilnehmer:
-                        %s
-                        %d/%d Teilnehmer haben bestanden.
-                        %d/%d Teilnehmer haben nicht bestanden.
-                        %d/%d Teilnehmer haben eine ungültige Bewertung."""
-                ).formatted(
-                        note,
-                        "\n? Note [1-5]: ".repeat(teilnehmer).substring(1),
-                        positiv, teilnehmer,
-                        negativ, teilnehmer,
-                        ungueltig, teilnehmer
-                );
-                
                 RegexTest t = new RegexTest(() -> Bsp02.main(new String[] {}),
+                        
                         (
                                 "\\s*\\?? Erreichte Punkte\\s*\\[0[-–—]120]\\s*:\\s*%s\\s*" +
                                         "\\s*\\??\\s*Anzahl\\s*der\\s*Teilnehmer:\\s*" +
@@ -125,15 +91,29 @@ public class Bsp02TestRegex
                                         "\\s*%d/%d\\s*Teilnehmer\\s*haben\\s*nicht\\s*bestanden.\\s*" +
                                         "\\s*%d/%d\\s*Teilnehmer\\s*haben\\s*eine\\s*ungültige\\s*Beurteilung.\\s*"
                         ).formatted(
-                                note
-                                        .replace(" ", "\\s*")
-                                        .replace("(", "\\(")
-                                        .replace(")", "\\)"),
+                                noteRegex,
                                 positiv, teilnehmer,
                                 negativ, teilnehmer,
                                 ungueltig, teilnehmer
                         ),
-                        expected,
+                        
+                        () -> (
+                                """
+                                        ? Erreichte Punkte:
+                                        %s
+                                        ? Anzahl der Teilnehmer:
+                                        %s
+                                        %d/%d Teilnehmer haben bestanden.
+                                        %d/%d Teilnehmer haben nicht bestanden.
+                                        %d/%d Teilnehmer haben eine ungültige Bewertung."""
+                        ).formatted(
+                                note,
+                                "\n? Note [1-5]: ".repeat(teilnehmer).substring(1),
+                                positiv, teilnehmer,
+                                negativ, teilnehmer,
+                                ungueltig, teilnehmer
+                        ),
+                        
                         ("" +
                                 punkte + ";" +
                                 teilnehmer + ";" +
