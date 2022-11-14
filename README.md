@@ -7,7 +7,7 @@ A lot of examples in the test source folder.
 - `Bsp01Test` class contains basic examples
 - `Bsp01TestQuick` class contains examples using convenience methods
 - `Bsp02Test` class contains examples using the builder methods (also for convenience)
-- `Bsp02TestRegex` class contains examples using RegEx
+- `Bsp01TestRegex` and `Bsp02TestRegex` classes contain examples using RegEx
 
 ## Example Error Messages
 
