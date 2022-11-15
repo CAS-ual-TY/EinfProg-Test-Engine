@@ -1,9 +1,6 @@
 package einfprog;
 
-import einfprog.test_engine.Atom;
-import einfprog.test_engine.AtomTest;
-import einfprog.test_engine.Compound;
-import einfprog.test_engine.Engine;
+import einfprog.test_engine.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
@@ -26,7 +23,7 @@ public class Bsp01TestFail
         
         if(ERROR == 2)
         {
-            verbrauchPro100km += Atom.DEFAULT_DOUBLE_ERROR * 1.0001;
+            verbrauchPro100km += Settings.DEFAULT_DOUBLE_ERROR * 1.0001;
         }
         
         System.out.print("? Dieselpreis pro " + (ERROR == 1 ? "t" : "") + "Liter[Euro]: ");

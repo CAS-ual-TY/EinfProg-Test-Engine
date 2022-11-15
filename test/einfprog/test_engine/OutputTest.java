@@ -2,11 +2,11 @@ package einfprog.test_engine;
 
 import java.io.PrintWriter;
 
-public abstract class AbstractTest
+public abstract class OutputTest
 {
     private Runnable test;
     
-    public AbstractTest(Runnable test)
+    public OutputTest(Runnable test)
     {
         this.test = test;
     }

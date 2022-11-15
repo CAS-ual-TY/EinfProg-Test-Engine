@@ -114,7 +114,7 @@ With the following input:
 ```-
 java.lang.RuntimeException: ERROR == 4
   at einfprog.Bsp01TestFail.testRun(Bsp01TestFail.java:43)
-  at einfprog.test_engine.AbstractTest.run(AbstractTest.java:18)
+  at einfprog.test_engine.OutputTest.run(AbstractTest.java:18)
   at einfprog.test_engine.Engine.checkTest(Engine.java:78)
   at einfprog.Bsp01TestFail.testWithError(Bsp01TestFail.java:91)
   at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)

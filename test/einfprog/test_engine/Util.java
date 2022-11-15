@@ -1,5 +1,6 @@
 package einfprog.test_engine;
 
+import java.io.PrintWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,6 +53,16 @@ public class Util
                 + ")";
     }
     
+    public static void strongSpacer(PrintWriter pw)
+    {
+        pw.println("=".repeat(Settings.SPACING_LINE_LENGTH));
+    }
+    
+    public static void weakSpacer(PrintWriter pw)
+    {
+        pw.println("-".repeat(Settings.SPACING_LINE_LENGTH));
+    }
+    
     public static String removeFakeSpace(String s)
     {
         return s.replaceAll("[^\\S\\r\\n]", " ");
@@ -99,7 +110,7 @@ public class Util
     
     public static boolean doubleEquals(double x, double y)
     {
-        return doubleEquals(x, y, Atom.DEFAULT_DOUBLE_ERROR);
+        return doubleEquals(x, y, Settings.DEFAULT_DOUBLE_ERROR);
     }
     
     public static boolean intEquals(Matcher matcher, String groupName, int value)
@@ -112,5 +123,43 @@ public class Util
     {
         String s = matcher.group(groupName).trim();
         return isDouble(s) && doubleEquals(value, Double.parseDouble(s));
+    }
+    
+    public static Class<?> unboxClass(Class<?> o)
+    {
+        if(o == Byte.class)
+        {
+            return byte.class;
+        }
+        if(o == Short.class)
+        {
+            return short.class;
+        }
+        if(o == Integer.class)
+        {
+            return int.class;
+        }
+        if(o == Long.class)
+        {
+            return long.class;
+        }
+        if(o == Float.class)
+        {
+            return float.class;
+        }
+        if(o == Double.class)
+        {
+            return double.class;
+        }
+        if(o == Boolean.class)
+        {
+            return boolean.class;
+        }
+        if(o == Character.class)
+        {
+            return char.class;
+        }
+        
+        return o;
     }
 }

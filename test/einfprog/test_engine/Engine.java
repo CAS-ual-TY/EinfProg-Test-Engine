@@ -23,20 +23,19 @@ public class Engine
         initialized = false;
     }
     
-    private void beforeAll()
+    private void initialize()
     {
-        // formatting %f could result in commas as decimal points (instead of dots)
-        Locale.setDefault(Locale.US);
+        if(!initialized)
+        {
+            // formatting %f could result in commas as decimal points (instead of dots)
+            Locale.setDefault(Locale.US);
+            initialized = true;
+        }
     }
     
     private void beforeEach()
     {
-        if(!initialized)
-        {
-            beforeAll();
-            initialized = true;
-        }
-        
+        initialize();
         userOut = new ByteArrayOutputStream();
         System.setOut(new PrintStream(userOut));
     }
@@ -57,7 +56,7 @@ public class Engine
         return userOut.toString();
     }
     
-    public void checkTest(AbstractTest test) throws IOException
+    public void checkTest(OutputTest test) throws IOException
     {
         beforeEach();
         
@@ -75,8 +74,11 @@ public class Engine
             }
             catch(Exception e)
             {
+                Util.strongSpacer(pw);
                 pw.println("An error occurred while testing the program:");
+                Util.weakSpacer(pw);
                 e.printStackTrace(pw);
+                Util.strongSpacer(pw);
             }
             
             String rawOut = getRawOutput();
@@ -89,6 +91,20 @@ public class Engine
         finally
         {
             afterEach();
+        }
+    }
+    
+    public <C, T> void checkTest(MethodTest<C, T> test) throws IOException
+    {
+        initialize();
+        
+        try(StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw))
+        {
+            if(!test.hasMethod(pw) || !test.testValue(pw))
+            {
+                Assertions.fail(sw.toString());
+            }
         }
     }
 }

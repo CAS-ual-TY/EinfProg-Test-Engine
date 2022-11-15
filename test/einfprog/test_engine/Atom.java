@@ -6,10 +6,6 @@ import java.util.function.IntFunction;
 
 public abstract class Atom
 {
-    // default permitted error:
-    // x = required value,  o = output value
-    // o passes  iff.  abs(x - o) <= error
-    public static double DEFAULT_DOUBLE_ERROR = 0.1D;
     
     public static Builder builder()
     {
@@ -60,7 +56,7 @@ public abstract class Atom
     
     public static Atom doubleAtom(double d)
     {
-        return doubleAtom(d, DEFAULT_DOUBLE_ERROR);
+        return doubleAtom(d, Settings.DEFAULT_DOUBLE_ERROR);
     }
     
     public static Atom stringAtom(String s)

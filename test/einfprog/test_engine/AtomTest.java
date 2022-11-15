@@ -5,10 +5,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.stream.Collectors;
 
-public class AtomTest extends AbstractTest
+public class AtomTest extends OutputTest
 {
-    public static int LINE_LENGTH = 50;
-    
     private Atom[] input;
     private Compound[] lines;
     private Runnable test;
@@ -62,31 +60,31 @@ public class AtomTest extends AbstractTest
                 if(!atom.test(substring)) // +size to account for spaces between atoms
                 {
                     errorCallback.println("Wrong output detected!");
-                    errorCallback.println("=".repeat(LINE_LENGTH));
+                    Util.strongSpacer(errorCallback);
                     
                     errorCallback.println("Expected: \"" + atom.toString() + "\"");
                     errorCallback.println("  (This is to be done:)");
-                    errorCallback.println("-".repeat(LINE_LENGTH));
+                    Util.weakSpacer(errorCallback);
                     doneOutputs.forEach(errorCallback::println);
                     errorCallback.println(removedAtoms.stream().map(Atom::toString).collect(Collectors.joining()) + atom.toString());
                     errorCallback.println(" ".repeat(trim + atom.getErrorOffset(substring)) + "^");
                     
-                    errorCallback.println("=".repeat(LINE_LENGTH));
+                    Util.strongSpacer(errorCallback);
                     
                     errorCallback.println("Found: \"" + substring + "\"");
                     errorCallback.println("  (This is your output:)");
-                    errorCallback.println("-".repeat(LINE_LENGTH));
+                    Util.weakSpacer(errorCallback);
                     doneOutputs.forEach(errorCallback::println);
                     errorCallback.println(line);
                     errorCallback.println(" ".repeat(trim + atom.getErrorOffset(substring)) + "^");
                     
-                    errorCallback.println("=".repeat(LINE_LENGTH));
+                    Util.strongSpacer(errorCallback);
                     
                     errorCallback.println("With the following input:");
-                    errorCallback.println("-".repeat(LINE_LENGTH));
+                    Util.weakSpacer(errorCallback);
                     Arrays.stream(input).forEach(a -> errorCallback.println(a.toString()));
                     
-                    errorCallback.println("=".repeat(LINE_LENGTH));
+                    Util.strongSpacer(errorCallback);
                     return false;
                 }
                 else

@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegexTest extends AbstractTest
+public class RegexTest extends OutputTest
 {
     private String regex;
     private Supplier<String> expected;
@@ -54,34 +54,34 @@ public class RegexTest extends AbstractTest
         String expected = this.expected.get();
         
         errorCallback.println("Wrong output detected!");
-        errorCallback.println("=".repeat(AtomTest.LINE_LENGTH));
+        Util.strongSpacer(errorCallback);
         
         errorCallback.println("Expected:");
         errorCallback.println("  (This is to be done:)");
-        errorCallback.println("-".repeat(AtomTest.LINE_LENGTH));
+        Util.weakSpacer(errorCallback);
         errorCallback.print(expected);
         if(!expected.endsWith(System.lineSeparator()))
         {
             errorCallback.println();
         }
         
-        errorCallback.println("=".repeat(AtomTest.LINE_LENGTH));
+        Util.strongSpacer(errorCallback);
         
         errorCallback.println("Found:");
         errorCallback.println("  (This is your output:)");
-        errorCallback.println("-".repeat(AtomTest.LINE_LENGTH));
+        Util.weakSpacer(errorCallback);
         errorCallback.print(rawOutput);
         if(!rawOutput.endsWith(System.lineSeparator()))
         {
             errorCallback.println();
         }
         
-        errorCallback.println("=".repeat(AtomTest.LINE_LENGTH));
+        Util.strongSpacer(errorCallback);
         
         errorCallback.println("With the following input:");
-        errorCallback.println("-".repeat(AtomTest.LINE_LENGTH));
+        Util.weakSpacer(errorCallback);
         Arrays.stream(input).forEach(errorCallback::println);
         
-        errorCallback.println("=".repeat(AtomTest.LINE_LENGTH));
+        Util.strongSpacer(errorCallback);
     }
 }
