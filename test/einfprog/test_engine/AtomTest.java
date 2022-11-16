@@ -7,15 +7,27 @@ import java.util.stream.Collectors;
 
 public class AtomTest extends OutputTest
 {
+    private String error;
     private Atom[] input;
     private Compound[] lines;
     private Runnable test;
     
-    public AtomTest(Runnable test, Atom[] input, Compound... output)
+    public AtomTest(String error, Runnable test, Atom[] input, Compound... output)
     {
         super(test);
+        this.error = error;
         this.input = input;
         lines = output;
+    }
+    
+    public AtomTest(Runnable test, Atom[] input, Compound... output)
+    {
+        this("Wrong output detected!", test, input, output);
+    }
+    
+    public AtomTest(MethodTest<?, ?> methodTest, Atom[] input, Compound... output)
+    {
+        this("Wrong output detected when calling " + methodTest.getMethodName() + "!", () -> Engine.ENGINE.checkTest(methodTest), input, output);
     }
     
     @Override
@@ -59,14 +71,14 @@ public class AtomTest extends OutputTest
                 
                 if(!atom.test(substring)) // +size to account for spaces between atoms
                 {
-                    errorCallback.println("Wrong output detected!");
+                    errorCallback.println(error);
                     Util.strongSpacer(errorCallback);
                     
                     errorCallback.println("Expected: \"" + atom.toString() + "\"");
                     errorCallback.println("  (This is to be done:)");
                     Util.weakSpacer(errorCallback);
                     doneOutputs.forEach(errorCallback::println);
-                    errorCallback.println(removedAtoms.stream().map(Atom::toString).collect(Collectors.joining()) + atom.toString());
+                    errorCallback.println(removedAtoms.stream().map(Atom::toString).collect(Collectors.joining()) + atom.toString() + atoms.stream().map(Atom::toString).collect(Collectors.joining()));
                     errorCallback.println(" ".repeat(trim + atom.getErrorOffset(substring)) + "^");
                     
                     Util.strongSpacer(errorCallback);

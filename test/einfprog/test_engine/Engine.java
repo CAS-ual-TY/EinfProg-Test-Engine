@@ -79,7 +79,7 @@ public class Engine
         return userOut.toString();
     }
     
-    public boolean checkTest(OutputTest test) throws IOException
+    public boolean checkTest(OutputTest test)
     {
         beforeEach();
         

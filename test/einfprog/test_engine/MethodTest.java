@@ -46,6 +46,11 @@ public class MethodTest<T, C>
         this(clazz, null, methodName, acceptedReturnValue != null ? Util.unboxClass(acceptedReturnValue.getClass()) : void.class, acceptedReturnValue, methodParams);
     }
     
+    public String getMethodName()
+    {
+        return methodName;
+    }
+    
     public boolean hasMethod(PrintWriter errorCallback)
     {
         try

@@ -5,12 +5,10 @@ import einfprog.test_engine.RegexTest;
 import einfprog.test_engine.Util;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 public class Bsp01TestRegex
 {
     @Test
-    public void test1() throws IOException
+    public void test1()
     {
         double[][] input = new double[][] {
                 {3D, 7D, 12.5D, 22D, 30.4D},
@@ -50,7 +48,7 @@ public class Bsp01TestRegex
     }
     
     @Test
-    public void test2() throws IOException
+    public void test2()
     {
         double[][] input = new double[][] {
                 {3D, 7D, 12.5D, 22D, 30.4D},

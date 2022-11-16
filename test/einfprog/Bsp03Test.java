@@ -3,12 +3,11 @@ package einfprog;
 import einfprog.test_engine.*;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.Random;
 
 public class Bsp03Test
 {
-    private int rollDie()
+    private int rollDieTest()
     {
         return PRNG.randomInt(6) + 1;
     }
@@ -18,47 +17,53 @@ public class Bsp03Test
         return Math.max(w1, w2) * 10 + Math.min(w1, w2);
     }
     
+    private void part1Test(int maxPaare, int maxMaexchen, Compound.Builder output)
+    {
+        int paare = 0;
+        int maexchen = 0;
+        while(paare < maxPaare && maexchen < maxMaexchen)
+        {
+            int w1 = rollDieTest();
+            int w2 = rollDieTest();
+            int wert = groessererWert(w1, w2);
+            
+            if(wert == 21)
+            {
+                output.add("(", w1, ",", w2, ")", " ", "Maexchen", " ", "#", ++maexchen);
+            }
+            else if(w1 == w2)
+            {
+                output.add("(", w1, ",", w2, ")", " ", "Paar", " ", "#", ++paare);
+            }
+            else
+            {
+                output.add("(", w1, ",", w2, ")", " ", wert);
+            }
+        }
+    }
+    
     @Test
-    public void test1() throws IOException
+    public void test1()
     {
         final Random random = new Random(27);
         
+        // #################################### Test part1 main(...) ####################################
         for(int test = 0; test < 10; test++)
         {
             long seed = random.nextLong();
             
-            // RESET PRNG #####################################################################
+            // RESET PRNG
             PRNG.randomize(seed);
             
             int maxPaare = random.nextInt(20);
             int maxMaexchen = random.nextInt(20);
             
             Compound.Builder output = Compound.builder();
+            
             output.add("? Maximale Anzahl der Paare: ").add("? Maximale Anzahl der Maexchen: ");
+            part1Test(maxPaare, maxMaexchen, output);
             
-            int paare = 0;
-            int maexchen = 0;
-            while(paare < maxPaare && maexchen < maxMaexchen)
-            {
-                int w1 = rollDie();
-                int w2 = rollDie();
-                int wert = groessererWert(w1, w2);
-                
-                if(wert == 21)
-                {
-                    output.add("(", w1, ",", w2, ")", " ", "Maexchen", " ", "#", ++maexchen);
-                }
-                else if(w1 == w2)
-                {
-                    output.add("(", w1, ",", w2, ")", " ", "Paar", " ", "#", ++paare);
-                }
-                else
-                {
-                    output.add("(", w1, ",", w2, ")", " ", wert);
-                }
-            }
-            
-            // RESET PRNG #####################################################################
+            // RESET PRNG
             PRNG.randomize(seed);
             
             AtomTest t = new AtomTest(() -> Bsp03.main(new String[] {}),
@@ -72,16 +77,17 @@ public class Bsp03Test
             }
         }
         
+        // #################################### Test rollDie() ####################################
         for(int test = 0; test < 50; test++)
         {
             long seed = random.nextLong();
             
-            // RESET PRNG #####################################################################
+            // RESET PRNG
             PRNG.randomize(seed);
             
-            int result = rollDie();
+            int result = rollDieTest();
             
-            // RESET PRNG #####################################################################
+            // RESET PRNG
             PRNG.randomize(seed);
             
             MethodTest<Integer, Bsp03> t = new MethodTest<>(
@@ -96,6 +102,7 @@ public class Bsp03Test
             }
         }
         
+        // #################################### Test isMaexchen(...) ####################################
         for(int w1 = 1; w1 <= 6; w1++)
         {
             for(int w2 = 1; w2 <= 6; w2++)
@@ -122,7 +129,7 @@ public class Bsp03Test
         }
     }
     
-    private void maexchen(int n, Compound.Builder builder)
+    private void maexchenTest(int n, Compound.Builder builder)
     {
         int currentN = 1;
         int bestN = 1;
@@ -131,8 +138,8 @@ public class Bsp03Test
         
         while(currentN <= n && groessererWert(bestD1, bestD2) != 21)
         {
-            int d1 = rollDie();
-            int d2 = rollDie();
+            int d1 = rollDieTest();
+            int d2 = rollDieTest();
             
             if(groessererWert(d1, d2) == 21)
             {
@@ -163,22 +170,24 @@ public class Bsp03Test
     }
     
     @Test
-    public void test2() throws IOException
+    public void test2()
     {
-        final Random random = new Random(27);
+        final Random random = new Random(2727);
         
+        // #################################### Test maexchen(...) ####################################
         for(int test = 0; test < 10; test++)
         {
             long seed = random.nextLong();
             
-            // RESET PRNG #####################################################################
+            // RESET PRNG
             PRNG.randomize(seed);
             
             int wuerfe = random.nextInt(20);
-            Compound.Builder builder = Compound.builder();
-            maexchen(wuerfe, builder);
             
-            // RESET PRNG #####################################################################
+            Compound.Builder output = Compound.builder();
+            maexchenTest(wuerfe, output);
+            
+            // RESET PRNG
             PRNG.randomize(seed);
             
             MethodTest<Void, Bsp03> t1 = new MethodTest<Void, Bsp03>(
@@ -188,12 +197,46 @@ public class Bsp03Test
                     wuerfe
             );
             
-            AtomTest t2 = new AtomTest(() -> Engine.ENGINE.checkTest(t1),
+            AtomTest t2 = new AtomTest(t1,
                     Atom.construct(),
-                    builder.build()
+                    output.build()
             );
             
             if(!Engine.ENGINE.checkTest(t2))
+            {
+                return;
+            }
+        }
+        
+        // #################################### Test part2 main(...) ####################################
+        for(int test = 0; test < 10; test++)
+        {
+            long seed = random.nextLong();
+            
+            // RESET PRNG
+            PRNG.randomize(seed);
+            
+            int maxPaare = random.nextInt(20);
+            int maxMaexchen = random.nextInt(20);
+            int wuerfe = random.nextInt(20);
+            
+            Compound.Builder output = Compound.builder();
+            
+            output.add("? Maximale Anzahl der Paare: ").add("? Maximale Anzahl der Maexchen: ");
+            part1Test(maxPaare, maxMaexchen, output);
+            
+            output.add("? Anzahl der Wuerfe: ");
+            maexchenTest(wuerfe, output);
+            
+            // RESET PRNG
+            PRNG.randomize(seed);
+            
+            AtomTest t = new AtomTest(() -> Bsp03.main(new String[] {}),
+                    Atom.construct(maxPaare, maxMaexchen, wuerfe),
+                    output.build()
+            );
+            
+            if(!Engine.ENGINE.checkTest(t))
             {
                 return;
             }

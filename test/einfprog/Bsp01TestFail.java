@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 
-import java.io.IOException;
-
 public class Bsp01TestFail
 {
     // 1: mismatched string
@@ -57,7 +55,7 @@ public class Bsp01TestFail
     }
     
     @Test
-    public void testWithError() throws IOException
+    public void testWithError()
     {
         double verbrauchPro100km = 2D;
         double dieselpreisPro1L = 3D;

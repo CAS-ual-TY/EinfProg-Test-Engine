@@ -35,7 +35,7 @@ public class Bsp03
         //Part 2
         System.out.print("? Anzahl der Wuerfe: ");
         int n = SavitchIn.readLineInt();
-        //maexchen(n);
+        maexchen(n);
     }
     
     public static int rollDie()

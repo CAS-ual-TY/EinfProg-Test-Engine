@@ -4,7 +4,6 @@ import einfprog.test_engine.Engine;
 import einfprog.test_engine.RegexTest;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -33,7 +32,7 @@ public class Bsp02TestRegex
     }
     
     @Test
-    public void test1() throws IOException
+    public void test1()
     {
         for(int punkte = 0; punkte <= 120; punkte++)
         {
@@ -54,7 +53,7 @@ public class Bsp02TestRegex
     }
     
     @Test
-    public void test2() throws IOException
+    public void test2()
     {
         int[][] notenInput = new int[][] {
                 {1, 2, 3, 4, 5},

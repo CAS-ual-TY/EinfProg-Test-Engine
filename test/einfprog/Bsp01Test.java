@@ -6,12 +6,10 @@ import einfprog.test_engine.Compound;
 import einfprog.test_engine.Engine;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 public class Bsp01Test
 {
     @Test
-    public void test1() throws IOException
+    public void test1()
     {
         double[][] input = new double[][] {
                 {3D, 7D, 12.5D, 22D, 30.4D},
@@ -40,7 +38,7 @@ public class Bsp01Test
     }
     
     @Test
-    public void test2() throws IOException
+    public void test2()
     {
         double[][] input = new double[][] {
                 {3D, 7D, 12.5D, 22D, 30.4D},

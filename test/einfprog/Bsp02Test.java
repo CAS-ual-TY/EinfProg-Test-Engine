@@ -6,7 +6,6 @@ import einfprog.test_engine.Compound;
 import einfprog.test_engine.Engine;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 public class Bsp02Test
@@ -34,7 +33,7 @@ public class Bsp02Test
     }
     
     @Test
-    public void test1() throws IOException
+    public void test1()
     {
         for(int punkte = 0; punkte <= 120; punkte++)
         {
@@ -51,7 +50,7 @@ public class Bsp02Test
     }
     
     @Test
-    public void test2() throws IOException
+    public void test2()
     {
         int[][] notenInput = new int[][] {
                 {1, 2, 3, 4, 5},
