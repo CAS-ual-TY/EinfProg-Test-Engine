@@ -3,6 +3,9 @@ package einfprog.test_engine;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.function.IntFunction;
+import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class Atom
 {
@@ -76,7 +79,11 @@ public abstract class Atom
     
     public static class IntAtom extends Atom
     {
+        private static final Pattern INT_PATTERN = Pattern.compile("^(?<value>" + Util.INT_REGEX + ")");
+        
         public int atom;
+        
+        private Matcher matcher;
         
         public IntAtom(int i)
         {
@@ -86,23 +93,20 @@ public abstract class Atom
         @Override
         public boolean test(String s)
         {
-            String[] split = s.split("\\s", 2);
-            String numberString = split[0];
+            matcher = INT_PATTERN.matcher(s);
             
-            if(numberString == null || !Util.isInt(numberString))
+            if(!matcher.find())
             {
                 return false;
             }
             
-            int number = Integer.parseInt(numberString);
-            
-            return number == atom;
+            return Util.intEquals(matcher, "value", atom);
         }
         
         @Override
         public int trimOffString(String s)
         {
-            return s.split("\\s", 2)[0].length();
+            return matcher.group("value").length();
         }
         
         @Override
@@ -114,8 +118,12 @@ public abstract class Atom
     
     public static class DoubleAtom extends Atom
     {
+        private static final Pattern DOUBLE_PATTERN = Pattern.compile("^(?<value>" + Util.DOUBLE_REGEX + ")");
+        
         public double atom;
         public double error;
+        
+        private Matcher matcher;
         
         public DoubleAtom(double d, double error)
         {
@@ -126,21 +134,20 @@ public abstract class Atom
         @Override
         public boolean test(String s)
         {
-            String[] split = s.split("\\s", 2);
-            String numberString = split[0];
+            matcher = DOUBLE_PATTERN.matcher(s);
             
-            if(numberString == null || !Util.isDouble(numberString))
+            if(!matcher.find())
             {
                 return false;
             }
             
-            return Util.doubleEquals(atom, Double.parseDouble(numberString), error);
+            return Util.doubleEquals(matcher, "value", atom, error);
         }
         
         @Override
         public int trimOffString(String s)
         {
-            return s.split("\\s", 2)[0].length();
+            return matcher.group("value").length();
         }
         
         @Override
@@ -232,6 +239,16 @@ public abstract class Atom
             for(int i = 0; i < totalTimes; i++)
             {
                 atoms.add(Atom.detect(atomFactory.apply(i)));
+            }
+            
+            return this;
+        }
+        
+        public Builder add(int totalTimes, Supplier<Object> atomFactory)
+        {
+            for(int i = 0; i < totalTimes; i++)
+            {
+                atoms.add(Atom.detect(atomFactory.get()));
             }
             
             return this;

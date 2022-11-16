@@ -43,7 +43,7 @@ public class MethodTest<T, C>
     
     public MethodTest(Class<C> clazz, String methodName, T acceptedReturnValue, Object... methodParams)
     {
-        this(clazz, null, methodName, Util.unboxClass(acceptedReturnValue.getClass()), acceptedReturnValue, methodParams);
+        this(clazz, null, methodName, acceptedReturnValue != null ? Util.unboxClass(acceptedReturnValue.getClass()) : void.class, acceptedReturnValue, methodParams);
     }
     
     public boolean hasMethod(PrintWriter errorCallback)
@@ -61,6 +61,7 @@ public class MethodTest<T, C>
                 Util.weakSpacer(errorCallback);
                 errorCallback.println("Found: " + m.getReturnType().getSimpleName());
                 Util.strongSpacer(errorCallback);
+                return false;
             }
             
             return true;
@@ -73,7 +74,7 @@ public class MethodTest<T, C>
             errorCallback.println("Expected:");
             errorCallback.println("  (This is to be done:)");
             Util.weakSpacer(errorCallback);
-            errorCallback.println("public" + (instance == null ? " static " : " ") + methodReturnType.getSimpleName() + " " + methodName + "(" + Arrays.stream(methodParamsTypes).map(Class::getSimpleName).collect(Collectors.joining(", ")) + ")");
+            errorCallback.println("public" + " " + (instance == null ? "static" : "") + " " + (methodReturnType != null ? methodReturnType.getSimpleName() : "void") + " " + methodName + "(" + Arrays.stream(methodParamsTypes).map(Class::getSimpleName).collect(Collectors.joining(", ")) + ")");
             Util.strongSpacer(errorCallback);
             return false;
         }
@@ -85,7 +86,7 @@ public class MethodTest<T, C>
         {
             T value = (T) m.invoke(instance, methodParams);
             
-            if((acceptedReturnValue == null && value == null) || (acceptedReturnValue != null && !acceptedReturnValue.equals(value)))
+            if((methodReturnType != void.class && acceptedReturnValue == null && value != null) || (acceptedReturnValue != null && !acceptedReturnValue.equals(value)))
             {
                 Util.strongSpacer(errorCallback);
                 errorCallback.println("Wrong return value of method \"" + methodName + "\"" + " in class \"" + clazz.getSimpleName() + "\":");

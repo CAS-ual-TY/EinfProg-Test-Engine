@@ -13,7 +13,7 @@ public class Bsp01TestFail
     // 2: value slightly off
     // 3: missing entire output
     // 4: throw exception
-    public static final int ERROR = 4;
+    public static final int ERROR = 1;
     
     private void testRun()
     {

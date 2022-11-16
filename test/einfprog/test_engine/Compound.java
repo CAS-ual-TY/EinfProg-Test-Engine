@@ -2,6 +2,8 @@ package einfprog.test_engine;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.IntFunction;
+import java.util.function.Supplier;
 
 public class Compound
 {
@@ -117,6 +119,26 @@ public class Compound
             for(int i = 1; i < totalTimes; i++)
             {
                 compounds.add(compounds.getLast());
+            }
+            
+            return this;
+        }
+        
+        public Builder add(int totalTimes, IntFunction<Object[]> atomsFactory)
+        {
+            for(int i = 0; i < totalTimes; i++)
+            {
+                compounds.add(Compound.construct(atomsFactory.apply(i)));
+            }
+            
+            return this;
+        }
+        
+        public Builder add(int totalTimes, Supplier<Object[]> atomsFactory)
+        {
+            for(int i = 0; i < totalTimes; i++)
+            {
+                compounds.add(Compound.construct(atomsFactory.get()));
             }
             
             return this;

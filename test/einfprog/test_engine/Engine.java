@@ -17,10 +17,16 @@ public class Engine
     private PrintStream userIn;
     
     private boolean initialized;
+    private int testDepth;
+    private boolean testFailed;
+    
+    private StringWriter sw;
+    private PrintWriter pw;
     
     private Engine()
     {
         initialized = false;
+        testDepth = 0;
     }
     
     private void initialize()
@@ -35,15 +41,32 @@ public class Engine
     
     private void beforeEach()
     {
-        initialize();
-        userOut = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(userOut));
+        if(testDepth == 0)
+        {
+            initialize();
+            testFailed = false;
+            
+            userOut = new ByteArrayOutputStream();
+            System.setOut(new PrintStream(userOut));
+            
+            sw = new StringWriter();
+            pw = new PrintWriter(sw);
+        }
+        
+        testDepth++;
     }
     
     private void afterEach()
     {
-        System.setOut(SYS_OUT);
-        System.setIn(SYS_IN);
+        if(testDepth == 1)
+        {
+            System.setOut(SYS_OUT);
+            System.setIn(SYS_IN);
+            
+            pw.close();
+        }
+        
+        testDepth--;
     }
     
     private void sendInput(String[] input)
@@ -56,12 +79,11 @@ public class Engine
         return userOut.toString();
     }
     
-    public void checkTest(OutputTest test) throws IOException
+    public boolean checkTest(OutputTest test) throws IOException
     {
         beforeEach();
         
-        try(StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw))
+        try
         {
             sendInput(test.getInput());
             
@@ -81,12 +103,21 @@ public class Engine
                 Util.strongSpacer(pw);
             }
             
+            if(testFailed)
+            {
+                return false;
+            }
+            
             String rawOut = getRawOutput();
             
             if(!successfulRun || !test.passes(pw, rawOut))
             {
                 Assertions.fail(sw.toString());
+                testFailed = true;
+                return false;
             }
+            
+            return true;
         }
         finally
         {
@@ -94,17 +125,24 @@ public class Engine
         }
     }
     
-    public <C, T> void checkTest(MethodTest<C, T> test) throws IOException
+    public <C, T> boolean checkTest(MethodTest<C, T> test)
     {
-        initialize();
+        beforeEach();
         
-        try(StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw))
+        try
         {
             if(!test.hasMethod(pw) || !test.testValue(pw))
             {
                 Assertions.fail(sw.toString());
+                testFailed = true;
+                return false;
             }
+            
+            return true;
+        }
+        finally
+        {
+            afterEach();
         }
     }
 }

@@ -1,6 +1,7 @@
 package einfprog.test_engine;
 
 import java.io.PrintWriter;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -119,10 +120,15 @@ public class Util
         return isInt(s) && value == Integer.parseInt(s);
     }
     
-    public static boolean doubleEquals(Matcher matcher, String groupName, double value)
+    public static boolean doubleEquals(Matcher matcher, String groupName, double value, double error)
     {
         String s = matcher.group(groupName).trim();
-        return isDouble(s) && doubleEquals(value, Double.parseDouble(s));
+        return isDouble(s) && doubleEquals(value, Double.parseDouble(s), error);
+    }
+    
+    public static boolean doubleEquals(Matcher matcher, String groupName, double value)
+    {
+        return doubleEquals(matcher, groupName, value, Settings.DEFAULT_DOUBLE_ERROR);
     }
     
     public static Class<?> unboxClass(Class<?> o)
@@ -161,5 +167,10 @@ public class Util
         }
         
         return o;
+    }
+    
+    public static Runnable suppressClassloading(Supplier<Runnable> supplier)
+    {
+        return supplier.get();
     }
 }
