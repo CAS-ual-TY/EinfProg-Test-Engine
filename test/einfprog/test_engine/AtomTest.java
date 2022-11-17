@@ -25,7 +25,7 @@ public class AtomTest extends OutputTest
         this("Wrong output detected!", test, input, output);
     }
     
-    public AtomTest(MethodTest<?, ?> methodTest, Atom[] input, Compound... output)
+    public AtomTest(MethodInvokeTest<?, ?> methodTest, Atom[] input, Compound... output)
     {
         this("Wrong output detected when calling " + methodTest.getMethodName() + "!", () -> Engine.ENGINE.checkTest(methodTest), input, output);
     }

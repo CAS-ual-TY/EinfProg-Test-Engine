@@ -5,10 +5,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 
+import java.lang.reflect.Modifier;
 import java.util.Random;
 
 public class Bsp03TestFail
 {
+    // 1: Wrong output of method which might not exist
+    // 2: Wrong method signature
+    // 3: Wrong method signature
+    // 4: Wrong method signature
     public static final int ERROR = 1;
     
     public void testRun()
@@ -121,7 +126,7 @@ public class Bsp03TestFail
         return Math.max(w1, w2) * 10 + Math.min(w1, w2);
     }
     
-    private void part1Test(int maxPaare, int maxMaexchen, Compound.Builder output)
+    private void generatePart1Output(int maxPaare, int maxMaexchen, Compound.Builder output)
     {
         int paare = 0;
         int maexchen = 0;
@@ -146,7 +151,7 @@ public class Bsp03TestFail
         }
     }
     
-    private void maexchenTest(int n, Compound.Builder builder)
+    private void generateMaexchenOutput(int n, Compound.Builder builder)
     {
         int currentN = 1;
         int bestN = 1;
@@ -203,7 +208,7 @@ public class Bsp03TestFail
             // RESET PRNG
             PRNG.randomize(seed);
             
-            MethodTest<Integer, Bsp03TestFail> t = new MethodTest<>(
+            MethodInvokeTest<Integer, Bsp03TestFail> t = new MethodInvokeTest<>(
                     Bsp03TestFail.class,
                     "rollDie",
                     result
@@ -220,14 +225,14 @@ public class Bsp03TestFail
         {
             for(int w2 = 1; w2 <= 6; w2++)
             {
-                MethodTest<Boolean, Bsp03> t1 = new MethodTest<>(
+                MethodInvokeTest<Boolean, Bsp03> t1 = new MethodInvokeTest<>(
                         Bsp03.class,
                         "isMaexchen",
                         groessererWert(w1, w2) == 21,
                         w1, w2
                 );
                 
-                MethodTest<Boolean, Bsp03> t2 = new MethodTest<>(
+                MethodInvokeTest<Boolean, Bsp03> t2 = new MethodInvokeTest<>(
                         Bsp03.class,
                         "isPair",
                         w1 == w2,
@@ -252,12 +257,12 @@ public class Bsp03TestFail
             int wuerfe = random.nextInt(20);
             
             Compound.Builder output = Compound.builder();
-            maexchenTest(wuerfe, output);
+            generateMaexchenOutput(wuerfe, output);
             
             // RESET PRNG
             PRNG.randomize(seed);
             
-            MethodTest<Void, Bsp03> t1 = new MethodTest<Void, Bsp03>(
+            MethodInvokeTest<Void, Bsp03> t1 = new MethodInvokeTest<Void, Bsp03>(
                     Bsp03.class,
                     "maexchen",
                     null,
@@ -290,10 +295,10 @@ public class Bsp03TestFail
             Compound.Builder output = Compound.builder();
             
             output.add("? Maximale Anzahl der Paare: ").add("? Maximale Anzahl der Maexchen: ");
-            part1Test(maxPaare, maxMaexchen, output);
+            generatePart1Output(maxPaare, maxMaexchen, output);
             
             output.add("? Anzahl der Wuerfe: ");
-            maexchenTest(wuerfe, output);
+            generateMaexchenOutput(wuerfe, output);
             
             // RESET PRNG
             PRNG.randomize(seed);
@@ -307,7 +312,7 @@ public class Bsp03TestFail
             {
                 Engine.ENGINE.checkTest(t);
                 
-                if(ERROR != 0)
+                if(ERROR == 1)
                 {
                     Assertions.fail("This should be unreachable...");
                 }
@@ -317,6 +322,25 @@ public class Bsp03TestFail
                 e.printStackTrace();
                 return;
             }
+        }
+        
+        MethodTest<Integer, Bsp03TestFail> t = new MethodTest<>(
+                Bsp03TestFail.class, ERROR == 3 || ERROR == 4 ? null : this, "rollDieTest", (ERROR == 3 || ERROR == 4 ? Modifier.STATIC : 0) + (ERROR == 2 || ERROR == 4 ? Modifier.PUBLIC : Modifier.PRIVATE), int.class
+        );
+        
+        try
+        {
+            Engine.ENGINE.checkTest(t);
+            
+            if(ERROR == 2 || ERROR == 3 || ERROR == 4)
+            {
+                Assertions.fail("This should be unreachable...");
+            }
+        }
+        catch(AssertionFailedError e)
+        {
+            e.printStackTrace();
+            return;
         }
     }
 }

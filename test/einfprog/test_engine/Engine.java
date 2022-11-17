@@ -131,7 +131,28 @@ public class Engine
         
         try
         {
-            if(!test.hasMethod(pw) || !test.testValue(pw))
+            if(!test.hasMethod(pw))
+            {
+                Assertions.fail(sw.toString());
+                testFailed = true;
+                return false;
+            }
+            
+            return true;
+        }
+        finally
+        {
+            afterEach();
+        }
+    }
+    
+    public <C, T> boolean checkTest(MethodInvokeTest<C, T> test)
+    {
+        beforeEach();
+        
+        try
+        {
+            if(!test.testValue(pw))
             {
                 Assertions.fail(sw.toString());
                 testFailed = true;
