@@ -42,7 +42,7 @@ public class Bsp03Test
         }
     }
     
-    private void generateMaexchenOutput(int n, Compound.Builder builder)
+    private void generateMaexchenOutput(int n, Compound.Builder output)
     {
         int currentN = 1;
         int bestN = 1;
@@ -56,18 +56,18 @@ public class Bsp03Test
             
             if(groessererWert(d1, d2) == 21)
             {
-                builder.add(currentN, ". Wurf: ", "Maexchen");
+                output.add(currentN, ". Wurf: ", "Maexchen");
                 bestN = currentN;
             }
             else if(d1 == d2)
             {
-                builder.add(currentN, ". Wurf: ", d1, "er Paar");
+                output.add(currentN, ". Wurf: ", d1, "er Paar");
                 if(bestD1 != bestD2 || d1 > bestD1)
                     bestN = currentN;
             }
             else
             {
-                builder.add(currentN, ". Wurf: ", groessererWert(d1, d2));
+                output.add(currentN, ". Wurf: ", groessererWert(d1, d2));
                 if(bestD1 != bestD2 && groessererWert(d1, d2) > groessererWert(bestD1, bestD2))
                     bestN = currentN;
             }
@@ -79,7 +79,7 @@ public class Bsp03Test
             }
             currentN++;
         }
-        builder.add("Wurf ", bestN, " hat gewonnen.");
+        output.add("Wurf ", bestN, " hat gewonnen.");
     }
     
     @Test
