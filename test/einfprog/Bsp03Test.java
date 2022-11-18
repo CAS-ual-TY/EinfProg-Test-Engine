@@ -95,8 +95,8 @@ public class Bsp03Test
             // RESET PRNG
             PRNG.randomize(seed);
             
-            int maxPaare = random.nextInt(20);
-            int maxMaexchen = random.nextInt(20);
+            int maxPaare = random.nextInt(20) + 1;
+            int maxMaexchen = random.nextInt(20) + 1;
             
             Compound.Builder output = Compound.builder();
             
@@ -182,7 +182,7 @@ public class Bsp03Test
             // RESET PRNG
             PRNG.randomize(seed);
             
-            int wuerfe = random.nextInt(20);
+            int wuerfe = random.nextInt(20) + 1;
             
             Compound.Builder output = Compound.builder();
             generateMaexchenOutput(wuerfe, output);
@@ -216,9 +216,9 @@ public class Bsp03Test
             // RESET PRNG
             PRNG.randomize(seed);
             
-            int maxPaare = random.nextInt(20);
-            int maxMaexchen = random.nextInt(20);
-            int wuerfe = random.nextInt(20);
+            int maxPaare = random.nextInt(20) + 1;
+            int maxMaexchen = random.nextInt(20) + 1;
+            int wuerfe = random.nextInt(20) + 1;
             
             Compound.Builder output = Compound.builder();
             
