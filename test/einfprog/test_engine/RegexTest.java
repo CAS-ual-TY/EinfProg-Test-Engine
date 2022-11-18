@@ -53,7 +53,7 @@ public class RegexTest extends OutputTest
     {
         String expected = this.expected.get();
         
-        errorCallback.println("Wrong output detected!");
+        errorCallback.println("Wrong console output!");
         Util.strongSpacer(errorCallback);
         
         errorCallback.println("Expected:");
@@ -76,11 +76,14 @@ public class RegexTest extends OutputTest
             errorCallback.println();
         }
         
-        Util.strongSpacer(errorCallback);
-        
-        errorCallback.println("With the following input:");
-        Util.weakSpacer(errorCallback);
-        Arrays.stream(input).forEach(errorCallback::println);
+        if(input.length > 0)
+        {
+            Util.strongSpacer(errorCallback);
+    
+            errorCallback.println("With the following console input:");
+            Util.weakSpacer(errorCallback);
+            Arrays.stream(input).forEach(errorCallback::println);
+        }
         
         Util.strongSpacer(errorCallback);
     }
