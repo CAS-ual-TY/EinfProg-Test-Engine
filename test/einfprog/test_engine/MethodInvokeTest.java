@@ -42,6 +42,16 @@ public class MethodInvokeTest<T, C>
         this(clazz, null, methodName, acceptedReturnValue, methodParams);
     }
     
+    public Class<C> getMethodClass()
+    {
+        return methodTest.getMethodClass();
+    }
+    
+    public Object[] getMethodParams()
+    {
+        return methodParams;
+    }
+    
     public String getMethodName()
     {
         return methodTest.getMethodName();

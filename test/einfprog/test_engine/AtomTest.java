@@ -22,12 +22,13 @@ public class AtomTest extends OutputTest
     
     public AtomTest(Runnable test, Atom[] input, Compound... output)
     {
-        this("Wrong output detected!", test, input, output);
+        this("Wrong console output detected!", test, input, output);
     }
     
-    public AtomTest(MethodInvokeTest<?, ?> methodTest, Atom[] input, Compound... output)
+    public AtomTest(MethodInvokeTest<?, ?> methodTest, Compound... output)
     {
-        this("Wrong output detected when calling " + methodTest.getMethodName() + "!", () -> Engine.ENGINE.checkTest(methodTest), input, output);
+        this("Wrong console output detected when calling \"" + methodTest.getMethodClass().getSimpleName() + "." + methodTest.getMethodName() + "(" + Arrays.stream(methodTest.getMethodParams()).map(Object::toString).collect(Collectors.joining(", ")) + ")\"!",
+                () -> Engine.ENGINE.checkTest(methodTest), Atom.construct(), output);
     }
     
     @Override
@@ -90,11 +91,14 @@ public class AtomTest extends OutputTest
                     errorCallback.println(line);
                     errorCallback.println(" ".repeat(trim + atom.getErrorOffset(substring)) + "^");
                     
-                    Util.strongSpacer(errorCallback);
-                    
-                    errorCallback.println("With the following input:");
-                    Util.weakSpacer(errorCallback);
-                    Arrays.stream(input).forEach(a -> errorCallback.println(a.toString()));
+                    if(input.length > 0)
+                    {
+                        Util.strongSpacer(errorCallback);
+                        
+                        errorCallback.println("With the following console input:");
+                        Util.weakSpacer(errorCallback);
+                        Arrays.stream(input).forEach(a -> errorCallback.println(a.toString()));
+                    }
                     
                     Util.strongSpacer(errorCallback);
                     return false;

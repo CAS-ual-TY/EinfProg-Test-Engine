@@ -197,10 +197,7 @@ public class Bsp03Test
                     wuerfe
             );
             
-            AtomTest t2 = new AtomTest(t1,
-                    Atom.construct(),
-                    output.build()
-            );
+            AtomTest t2 = new AtomTest(t1, output.build());
             
             if(!Engine.ENGINE.checkTest(t2))
             {
