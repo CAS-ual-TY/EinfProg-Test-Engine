@@ -14,9 +14,9 @@ public class Bsp03TestFail
     // 2: Wrong method signature
     // 3: Wrong method signature
     // 4: Wrong method signature
-    public static final int ERROR = 1;
+    public static final int ERRORS = 4;
     
-    public void testRun()
+    public void testRun(int error)
     {
         System.out.print("? Maximale Anzahl der Paare: ");
         int nofPairs = SavitchIn.readLineInt();
@@ -126,7 +126,7 @@ public class Bsp03TestFail
         return Math.max(w1, w2) * 10 + Math.min(w1, w2);
     }
     
-    private void generatePart1Output(int maxPaare, int maxMaexchen, Compound.Builder output)
+    private void generatePart1Output(int maxPaare, int maxMaexchen, Compound.Builder output, int error)
     {
         int paare = 0;
         int maexchen = 0;
@@ -138,7 +138,7 @@ public class Bsp03TestFail
             
             if(wert == 21)
             {
-                output.add("(", w1, ",", w2 + (ERROR == 1 ? 1 : 0), ")", " ", "Maexchen", " ", "#", ++maexchen);
+                output.add("(", w1, ",", w2 + (error == 1 ? 1 : 0), ")", " ", "Maexchen", " ", "#", ++maexchen);
             }
             else if(w1 == w2)
             {
@@ -278,7 +278,7 @@ public class Bsp03TestFail
         }
         
         // #################################### Test main(...) ####################################
-        for(int test = 0; test < 10; test++)
+        for(int error = 0; error <= ERRORS; error++)
         {
             long seed = random.nextLong();
             
@@ -292,7 +292,7 @@ public class Bsp03TestFail
             Compound.Builder output = Compound.builder();
             
             output.add("? Maximale Anzahl der Paare: ").add("? Maximale Anzahl der Maexchen: ");
-            generatePart1Output(maxPaare, maxMaexchen, output);
+            generatePart1Output(maxPaare, maxMaexchen, output, error);
             
             output.add("? Anzahl der Wuerfe: ");
             generateMaexchenOutput(wuerfe, output);
@@ -300,44 +300,32 @@ public class Bsp03TestFail
             // RESET PRNG
             PRNG.randomize(seed);
             
-            AtomTest t = new AtomTest(() -> Bsp03.main(new String[] {}),
+            final int finalError = error;
+            AtomTest t1 = new AtomTest(() -> testRun(finalError),
                     Atom.construct(maxPaare, maxMaexchen, wuerfe),
                     output.build()
             );
             
+            MethodTest<Integer, Bsp03TestFail> t2 = new MethodTest<>(
+                    Bsp03TestFail.class, error == 3 || error == 4 ? null : this, "rollDieTest", (error == 3 || error == 4 ? Modifier.STATIC : 0) + (error == 2 || error == 4 ? Modifier.PUBLIC : Modifier.PRIVATE), int.class
+            );
+            
             try
             {
-                Engine.ENGINE.checkTest(t);
+                Engine.ENGINE.checkTest(t1);
+                Engine.ENGINE.checkTest(t2);
                 
-                if(ERROR == 1)
+                if(error > 0)
                 {
                     Assertions.fail("This should be unreachable...");
                 }
             }
             catch(AssertionFailedError e)
             {
-                e.printStackTrace();
-                return;
+                //e.printStackTrace();
+                System.err.print(e.getMessage());
+                Util.testSpacer();
             }
-        }
-        
-        MethodTest<Integer, Bsp03TestFail> t = new MethodTest<>(
-                Bsp03TestFail.class, ERROR == 3 || ERROR == 4 ? null : this, "rollDieTest", (ERROR == 3 || ERROR == 4 ? Modifier.STATIC : 0) + (ERROR == 2 || ERROR == 4 ? Modifier.PUBLIC : Modifier.PRIVATE), int.class
-        );
-        
-        try
-        {
-            Engine.ENGINE.checkTest(t);
-            
-            if(ERROR == 2 || ERROR == 3 || ERROR == 4)
-            {
-                Assertions.fail("This should be unreachable...");
-            }
-        }
-        catch(AssertionFailedError e)
-        {
-            e.printStackTrace();
-            return;
         }
     }
 }

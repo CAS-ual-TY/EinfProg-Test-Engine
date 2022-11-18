@@ -64,6 +64,14 @@ public class Util
         pw.println("-".repeat(Settings.SPACING_LINE_LENGTH));
     }
     
+    public static void testSpacer()
+    {
+        System.err.println();
+        System.err.println("#".repeat(Settings.SPACING_LINE_LENGTH * 2));
+        System.err.println("#".repeat(Settings.SPACING_LINE_LENGTH * 2));
+        System.err.println();
+    }
+    
     public static String removeFakeSpace(String s)
     {
         return s.replaceAll("[^\\S\\r\\n]", " ");
