@@ -111,10 +111,7 @@ public class Bsp03Test
                     output.build()
             );
             
-            if(!Engine.ENGINE.checkTest(t))
-            {
-                return;
-            }
+            Engine.ENGINE.checkTest(t);
         }
         
         // #################################### Test rollDie() ####################################
@@ -136,13 +133,10 @@ public class Bsp03Test
                     result
             );
             
-            if(!Engine.ENGINE.checkTest(t))
-            {
-                return;
-            }
+            Engine.ENGINE.checkTest(t);
         }
         
-        // #################################### Test isMaexchen(...) ####################################
+        // #################################### Test isMaexchen(...) & isPair(...) ####################################
         for(int w1 = 1; w1 <= 6; w1++)
         {
             for(int w2 = 1; w2 <= 6; w2++)
@@ -161,10 +155,8 @@ public class Bsp03Test
                         w1, w2
                 );
                 
-                if(!Engine.ENGINE.checkTest(t1) || !Engine.ENGINE.checkTest(t2))
-                {
-                    return;
-                }
+                Engine.ENGINE.checkTest(t1);
+                Engine.ENGINE.checkTest(t2);
             }
         }
     }

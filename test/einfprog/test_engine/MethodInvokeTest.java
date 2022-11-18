@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class MethodInvokeTest<T, C>
 {
@@ -57,6 +58,11 @@ public class MethodInvokeTest<T, C>
         return methodTest.getMethodName();
     }
     
+    public String getMethodCall()
+    {
+        return getMethodClass().getSimpleName() + "." + getMethodName() + "(" + Arrays.stream(methodParams).map(Object::toString).collect(Collectors.joining(", ")) + ")";
+    }
+    
     public boolean testValue(PrintWriter errorCallback)
     {
         try
@@ -72,7 +78,7 @@ public class MethodInvokeTest<T, C>
             
             if((method.getReturnType() != void.class && acceptedReturnValue == null && value != null) || (acceptedReturnValue != null && !acceptedReturnValue.equals(value)))
             {
-                errorCallback.println("Wrong return value of method \"" + method.getName() + "\"" + " in class \"" + method.getDeclaringClass().getSimpleName() + "\":");
+                errorCallback.println("Wrong return value when calling method \"" + getMethodCall() + "\":");
                 Util.strongSpacer(errorCallback);
                 errorCallback.println("Expected: " + acceptedReturnValue);
                 Util.weakSpacer(errorCallback);

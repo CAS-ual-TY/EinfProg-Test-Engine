@@ -14,7 +14,8 @@ public class Bsp03TestFail
     // 2: Wrong method signature
     // 3: Wrong method signature
     // 4: Wrong method signature
-    public static final int ERRORS = 4;
+    // 5: Wrong method return
+    public static final int ERRORS = 5;
     
     public void testRun(int error)
     {
@@ -195,88 +196,6 @@ public class Bsp03TestFail
     {
         final Random random = new Random(27);
         
-        // #################################### Test rollDie() ####################################
-        for(int test = 0; test < 50; test++)
-        {
-            long seed = random.nextLong();
-            
-            // RESET PRNG
-            PRNG.randomize(seed);
-            
-            int result = rollDieTest();
-            
-            // RESET PRNG
-            PRNG.randomize(seed);
-            
-            MethodInvokeTest<Integer, Bsp03TestFail> t = new MethodInvokeTest<>(
-                    Bsp03TestFail.class,
-                    "rollDie",
-                    result
-            );
-            
-            if(!Engine.ENGINE.checkTest(t))
-            {
-                return;
-            }
-        }
-        
-        // #################################### Test isMaexchen(...) ####################################
-        for(int w1 = 1; w1 <= 6; w1++)
-        {
-            for(int w2 = 1; w2 <= 6; w2++)
-            {
-                MethodInvokeTest<Boolean, Bsp03> t1 = new MethodInvokeTest<>(
-                        Bsp03.class,
-                        "isMaexchen",
-                        groessererWert(w1, w2) == 21,
-                        w1, w2
-                );
-                
-                MethodInvokeTest<Boolean, Bsp03> t2 = new MethodInvokeTest<>(
-                        Bsp03.class,
-                        "isPair",
-                        w1 == w2,
-                        w1, w2
-                );
-                
-                if(!Engine.ENGINE.checkTest(t1) || !Engine.ENGINE.checkTest(t2))
-                {
-                    return;
-                }
-            }
-        }
-        
-        // #################################### Test maexchen(...) ####################################
-        for(int test = 0; test < 10; test++)
-        {
-            long seed = random.nextLong();
-            
-            // RESET PRNG
-            PRNG.randomize(seed);
-            
-            int wuerfe = random.nextInt(20) + 1;
-            
-            Compound.Builder output = Compound.builder();
-            generateMaexchenOutput(wuerfe, output);
-            
-            // RESET PRNG
-            PRNG.randomize(seed);
-            
-            MethodInvokeTest<Void, Bsp03> t1 = new MethodInvokeTest<Void, Bsp03>(
-                    Bsp03.class,
-                    "maexchen",
-                    null,
-                    wuerfe
-            );
-            
-            AtomTest t2 = new AtomTest(t1, output.build());
-            
-            if(!Engine.ENGINE.checkTest(t2))
-            {
-                return;
-            }
-        }
-        
         // #################################### Test main(...) ####################################
         for(int error = 0; error <= ERRORS; error++)
         {
@@ -310,10 +229,21 @@ public class Bsp03TestFail
                     Bsp03TestFail.class, error == 3 || error == 4 ? null : this, "rollDieTest", (error == 3 || error == 4 ? Modifier.STATIC : 0) + (error == 2 || error == 4 ? Modifier.PUBLIC : Modifier.PRIVATE), int.class
             );
             
+            int w1 = 1;
+            int w2 = 2;
+            
+            MethodInvokeTest<Boolean, Bsp03> t3 = new MethodInvokeTest<>(
+                    Bsp03.class,
+                    "isMaexchen",
+                    error != 5,
+                    w1, w2
+            );
+            
             try
             {
                 Engine.ENGINE.checkTest(t1);
                 Engine.ENGINE.checkTest(t2);
+                Engine.ENGINE.checkTest(t3);
                 
                 if(error > 0)
                 {

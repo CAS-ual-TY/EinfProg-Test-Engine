@@ -22,12 +22,12 @@ public class AtomTest extends OutputTest
     
     public AtomTest(Runnable test, Atom[] input, Compound... output)
     {
-        this("Wrong console output detected!", test, input, output);
+        this("Wrong console output!", test, input, output);
     }
     
     public AtomTest(MethodInvokeTest<?, ?> methodTest, Compound... output)
     {
-        this("Wrong console output detected when calling \"" + methodTest.getMethodClass().getSimpleName() + "." + methodTest.getMethodName() + "(" + Arrays.stream(methodTest.getMethodParams()).map(Object::toString).collect(Collectors.joining(", ")) + ")\"!",
+        this("Wrong console output when calling method \"" + methodTest.getMethodCall() + "\"!",
                 () -> Engine.ENGINE.checkTest(methodTest), Atom.construct(), output);
     }
     
