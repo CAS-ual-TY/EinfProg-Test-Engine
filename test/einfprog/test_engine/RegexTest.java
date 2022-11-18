@@ -79,7 +79,7 @@ public class RegexTest extends OutputTest
         if(input.length > 0)
         {
             Util.strongSpacer(errorCallback);
-    
+            
             errorCallback.println("With the following console input:");
             Util.weakSpacer(errorCallback);
             Arrays.stream(input).forEach(errorCallback::println);
