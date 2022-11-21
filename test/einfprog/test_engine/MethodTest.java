@@ -34,6 +34,11 @@ public class MethodTest<T, C>
         this(clazz, instance, methodName, Modifier.PUBLIC | (instance == null ? Modifier.STATIC : 0), methodReturnType, methodParamsTypes);
     }
     
+    public MethodTest(Class<C> clazz, String methodName, Class<?> methodReturnType, Class<?>... methodParamsTypes)
+    {
+        this(clazz, null, methodName, methodReturnType, methodParamsTypes);
+    }
+    
     public Class<C> getMethodClass()
     {
         return clazz;

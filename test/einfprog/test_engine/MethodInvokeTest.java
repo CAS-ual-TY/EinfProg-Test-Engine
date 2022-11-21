@@ -60,7 +60,7 @@ public class MethodInvokeTest<T, C>
     
     public String getMethodCall()
     {
-        return getMethodClass().getSimpleName() + "." + getMethodName() + "(" + Arrays.stream(methodParams).map(Object::toString).collect(Collectors.joining(", ")) + ")";
+        return getMethodClass().getSimpleName() + "." + getMethodName() + "(" + Arrays.stream(methodParams).map(o -> o != null ? (o instanceof String ? "\"" + o.toString() + "\"" : o.toString()) : "null").collect(Collectors.joining(", ")) + ")";
     }
     
     public boolean testValue(PrintWriter errorCallback)
@@ -87,7 +87,15 @@ public class MethodInvokeTest<T, C>
                 return false;
             }
         }
-        catch(IllegalAccessException | InvocationTargetException e)
+        catch(InvocationTargetException e)
+        {
+            errorCallback.println("Exception when calling method \"" + getMethodCall() + "\":");
+            Util.strongSpacer(errorCallback);
+            e.getTargetException().printStackTrace(errorCallback);
+            Util.strongSpacer(errorCallback);
+            return false;
+        }
+        catch(IllegalAccessException e)
         {
             e.printStackTrace();
             return false;
