@@ -58,6 +58,11 @@ public class MethodInvokeTest<T, C>
         return methodTest.getMethodName();
     }
     
+    public Class<?>[] getMethodParamsTypes()
+    {
+        return methodTest.getMethodParamsTypes();
+    }
+    
     public String getMethodCall()
     {
         return getMethodClass().getSimpleName() + "." + getMethodName() + "(" + Arrays.stream(methodParams).map(o -> o != null ? (o instanceof String ? "\"" + o.toString() + "\"" : o.toString()) : "null").collect(Collectors.joining(", ")) + ")";

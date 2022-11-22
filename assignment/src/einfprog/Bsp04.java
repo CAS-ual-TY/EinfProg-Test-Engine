@@ -33,6 +33,7 @@ public class Bsp04
      */
     public static boolean isPalindrome(String s)
     {
+        s = s.toUpperCase();
         int n = s.length() - 1;
         int i = 0;
         while(i <= n / 2)
@@ -163,7 +164,17 @@ public class Bsp04
             }
             System.out.println("P1 score is " + sum1);
         }
-        return sum1 > sum2 ? sum1 : (0 - sum2);
+        
+        if(sum1 > sum2)
+        {
+            System.out.println("P1 wins with score " + sum1);
+            return sum1;
+        }
+        else
+        {
+            System.out.println("P2 wins with score " + sum2);
+            return -sum2;
+        }
     }
     
     /**

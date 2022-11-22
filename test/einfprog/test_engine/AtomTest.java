@@ -10,7 +10,10 @@ public class AtomTest extends OutputTest
     private String error;
     private Atom[] input;
     private Compound[] lines;
+    
     private Runnable test;
+    
+    private MethodInvokeTest<?, ?> methodInvokeTest;
     
     public AtomTest(String error, Runnable test, Atom[] input, Compound... output)
     {
@@ -18,17 +21,25 @@ public class AtomTest extends OutputTest
         this.error = error;
         this.input = input;
         lines = output;
+        
+        methodInvokeTest = null;
     }
     
     public AtomTest(Runnable test, Atom[] input, Compound... output)
     {
-        this("Wrong console output!", test, input, output);
+        this("Wrong console output:", test, input, output);
     }
     
-    public AtomTest(MethodInvokeTest<?, ?> methodTest, Compound... output)
+    public AtomTest(MethodInvokeTest<?, ?> methodInvokeTest, Atom[] input, Compound... output)
     {
-        this("Wrong console output when calling method \"" + methodTest.getMethodCall() + "\"!",
-                () -> Engine.ENGINE.checkTest(methodTest), Atom.construct(), output);
+        this("Wrong console output when calling method \"" + methodInvokeTest.getMethodName() + "\" in class \"" + methodInvokeTest.getMethodClass().getSimpleName() + "\":",
+                () -> Engine.ENGINE.checkTest(methodInvokeTest), input, output);
+        this.methodInvokeTest = methodInvokeTest;
+    }
+    
+    public AtomTest(MethodInvokeTest<?, ?> methodInvokeTest, Compound... output)
+    {
+        this(methodInvokeTest, Atom.construct(), output);
     }
     
     @Override
@@ -90,6 +101,31 @@ public class AtomTest extends OutputTest
                     doneOutputs.forEach(errorCallback::println);
                     errorCallback.println(line);
                     errorCallback.println(" ".repeat(trim + atom.getErrorOffset(substring)) + "^");
+                    
+                    if(methodInvokeTest != null && methodInvokeTest.getMethodParams().length > 0)
+                    {
+                        Util.strongSpacer(errorCallback);
+                        
+                        errorCallback.println("With the following parameters: ");
+                        Util.weakSpacer(errorCallback);
+                        for(int i = 0; i < methodInvokeTest.getMethodParams().length; i++)
+                        {
+                            if(methodInvokeTest.getMethodParams()[i] == null)
+                            {
+                                errorCallback.println("null");
+                            }
+                            else
+                            {
+                                Class<?> type = methodInvokeTest.getMethodParamsTypes()[i];
+                                String param = methodInvokeTest.getMethodParams()[i].toString();
+                                if(type == String.class)
+                                {
+                                    param = "\"" + param + "\"";
+                                }
+                                errorCallback.println(type.getSimpleName() + ": " + param);
+                            }
+                        }
+                    }
                     
                     if(input.length > 0)
                     {

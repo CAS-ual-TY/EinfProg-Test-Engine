@@ -3,7 +3,7 @@ package einfprog.test_engine;
 public class Settings
 {
     // length of "==...=" and "--...-" lines
-    public static int SPACING_LINE_LENGTH = 50;
+    public static int SPACING_LINE_LENGTH = 100;
     
     // default permitted error:
     // x = required value,  o = output value
