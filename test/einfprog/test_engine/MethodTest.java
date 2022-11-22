@@ -44,9 +44,29 @@ public class MethodTest<T, C>
         return clazz;
     }
     
+    public C getMethodInstance()
+    {
+        return instance;
+    }
+    
     public String getMethodName()
     {
         return methodName;
+    }
+    
+    public int getMethodModifiers()
+    {
+        return methodModifiers;
+    }
+    
+    public Class<?> getMethodReturnType()
+    {
+        return methodReturnType;
+    }
+    
+    public Class<?>[] getMethodParamsTypes()
+    {
+        return methodParamsTypes;
     }
     
     public Method getMethod()

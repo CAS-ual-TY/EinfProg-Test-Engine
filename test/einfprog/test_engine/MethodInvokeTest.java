@@ -78,20 +78,72 @@ public class MethodInvokeTest<T, C>
             
             if((method.getReturnType() != void.class && acceptedReturnValue == null && value != null) || (acceptedReturnValue != null && !acceptedReturnValue.equals(value)))
             {
-                errorCallback.println("Wrong return value when calling method \"" + getMethodCall() + "\":");
+                errorCallback.println("Wrong return value when calling method \"" + getMethodName() + "\" in class \"" + getMethodClass().getSimpleName() + "\":");
                 Util.strongSpacer(errorCallback);
                 errorCallback.println("Expected: " + acceptedReturnValue);
                 Util.weakSpacer(errorCallback);
                 errorCallback.println("Found: " + value);
+                
+                if(methodParams.length > 0)
+                {
+                    Util.strongSpacer(errorCallback);
+                    
+                    errorCallback.println("With the following parameters: ");
+                    Util.weakSpacer(errorCallback);
+                    for(int i = 0; i < methodParams.length; i++)
+                    {
+                        if(methodParams[i] == null)
+                        {
+                            errorCallback.println("null");
+                        }
+                        else
+                        {
+                            Class<?> type = methodTest.getMethodParamsTypes()[i];
+                            String param = methodParams[i].toString();
+                            if(type == String.class)
+                            {
+                                param = "\"" + param + "\"";
+                            }
+                            errorCallback.println(type.getSimpleName() + ": " + param);
+                        }
+                    }
+                }
+                
                 Util.strongSpacer(errorCallback);
                 return false;
             }
         }
         catch(InvocationTargetException e)
         {
-            errorCallback.println("Exception when calling method \"" + getMethodCall() + "\":");
+            errorCallback.println("Exception thrown when calling method \"" + getMethodName() + "\" in class \"" + getMethodClass().getSimpleName() + "\":");
             Util.strongSpacer(errorCallback);
             e.getTargetException().printStackTrace(errorCallback);
+    
+            if(methodParams.length > 0)
+            {
+                Util.strongSpacer(errorCallback);
+        
+                errorCallback.println("With the following parameters: ");
+                Util.weakSpacer(errorCallback);
+                for(int i = 0; i < methodParams.length; i++)
+                {
+                    if(methodParams[i] == null)
+                    {
+                        errorCallback.println("null");
+                    }
+                    else
+                    {
+                        Class<?> type = methodTest.getMethodParamsTypes()[i];
+                        String param = methodParams[i].toString();
+                        if(type == String.class)
+                        {
+                            param = "\"" + param + "\"";
+                        }
+                        errorCallback.println(type.getSimpleName() + ": " + param);
+                    }
+                }
+            }
+            
             Util.strongSpacer(errorCallback);
             return false;
         }
