@@ -3,9 +3,7 @@ package einfprog;
 import einfprog.test_engine.Engine;
 import einfprog.test_engine.MethodInvokeTest;
 import einfprog.test_engine.MethodTest;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.opentest4j.AssertionFailedError;
 
 public class Bsp04Test
 {
@@ -90,15 +88,6 @@ public class Bsp04Test
     @Test
     public void test2()
     {
-        try
-        {
-            test1();
-        }
-        catch(AssertionFailedError e)
-        {
-            Assertions.fail("Part 1 failed.");
-        }
-        
-        
+        Engine.ENGINE.requiresDoesNotFail(this::test1, "Part 1 failed.");
     }
 }

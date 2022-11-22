@@ -118,11 +118,11 @@ public class MethodInvokeTest<T, C>
             errorCallback.println("Exception thrown when calling method \"" + getMethodName() + "\" in class \"" + getMethodClass().getSimpleName() + "\":");
             Util.strongSpacer(errorCallback);
             e.getTargetException().printStackTrace(errorCallback);
-    
+            
             if(methodParams.length > 0)
             {
                 Util.strongSpacer(errorCallback);
-        
+                
                 errorCallback.println("With the following parameters: ");
                 Util.weakSpacer(errorCallback);
                 for(int i = 0; i < methodParams.length; i++)

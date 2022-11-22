@@ -1,6 +1,7 @@
 package einfprog.test_engine;
 
 import org.junit.jupiter.api.Assertions;
+import org.opentest4j.AssertionFailedError;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -77,6 +78,20 @@ public class Engine
     private String getRawOutput()
     {
         return userOut.toString();
+    }
+    
+    public boolean requiresDoesNotFail(Runnable test, String messageIfFail)
+    {
+        try
+        {
+            test.run();
+            return true;
+        }
+        catch(AssertionFailedError e)
+        {
+            Assertions.fail(messageIfFail);
+            return false;
+        }
     }
     
     public boolean checkTest(OutputTest test)
