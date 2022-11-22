@@ -2,7 +2,6 @@ package einfprog;
 
 import einfprog.test_engine.Engine;
 import einfprog.test_engine.MethodInvokeTest;
-import einfprog.test_engine.MethodTest;
 import org.junit.jupiter.api.Test;
 
 public class Bsp04Test
@@ -28,7 +27,7 @@ public class Bsp04Test
     {
         // #################################### Test isPalindrome(...) ####################################
         
-        String[][] strings = {{"ana", "anna", "tacocat"}, {"ananas", "banana", "alphabet"}, {"Xylophone", "Alphabet"}, {"", null}};
+        String[][] strings = {{"ana", "anna", "tacocat"}, {"ananas", "banana", "alphabet"}, {"Xylophone", "Alphabet"}, {""}};
         
         for(int i = 0; i < 2; i++)
         {
@@ -67,15 +66,11 @@ public class Bsp04Test
                     }
                 }
                 
-                MethodTest<Integer, Bsp04> t0 = new MethodTest<>(
-                        Bsp04.class,
-                        "wordScore",
-                        int.class,
-                        String.class
-                );
+                sum += 1;
                 
                 MethodInvokeTest<Integer, Bsp04> t = new MethodInvokeTest<>(
-                        t0,
+                        Bsp04.class,
+                        "wordScore",
                         sum,
                         s
                 );

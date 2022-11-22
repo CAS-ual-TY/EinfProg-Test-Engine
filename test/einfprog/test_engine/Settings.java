@@ -9,4 +9,6 @@ public class Settings
     // x = required value,  o = output value
     // o passes  iff.  abs(x - o) <= error
     public static double DEFAULT_DOUBLE_ERROR = 0.1D;
+    
+    public static boolean PRINT_STACKTRACE_ON_ERROR = false;
 }
