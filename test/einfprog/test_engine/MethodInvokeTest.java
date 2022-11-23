@@ -89,32 +89,10 @@ public class MethodInvokeTest<T, C>
                 Util.weakSpacer(errorCallback);
                 errorCallback.println("Found: " + value);
                 
-                if(methodParams.length > 0)
-                {
-                    Util.strongSpacer(errorCallback);
-                    
-                    errorCallback.println("With the following parameters: ");
-                    Util.weakSpacer(errorCallback);
-                    for(int i = 0; i < methodParams.length; i++)
-                    {
-                        if(methodParams[i] == null)
-                        {
-                            errorCallback.println("null");
-                        }
-                        else
-                        {
-                            Class<?> type = methodTest.getMethodParamsTypes()[i];
-                            String param = methodParams[i].toString();
-                            if(type == String.class)
-                            {
-                                param = "\"" + param + "\"";
-                            }
-                            errorCallback.println(type.getSimpleName() + ": " + param);
-                        }
-                    }
-                }
-                
                 Util.strongSpacer(errorCallback);
+                
+                appendParams(errorCallback);
+                
                 return false;
             }
         }
@@ -134,32 +112,8 @@ public class MethodInvokeTest<T, C>
                 errorCallback.println(e.getTargetException().getMessage());
             }
             
-            if(methodParams.length > 0)
-            {
-                Util.strongSpacer(errorCallback);
-                
-                errorCallback.println("With the following parameters: ");
-                Util.weakSpacer(errorCallback);
-                for(int i = 0; i < methodParams.length; i++)
-                {
-                    if(methodParams[i] == null)
-                    {
-                        errorCallback.println("null");
-                    }
-                    else
-                    {
-                        Class<?> type = methodTest.getMethodParamsTypes()[i];
-                        String param = methodParams[i].toString();
-                        if(type == String.class)
-                        {
-                            param = "\"" + param + "\"";
-                        }
-                        errorCallback.println(type.getSimpleName() + ": " + param);
-                    }
-                }
-            }
-            
             Util.strongSpacer(errorCallback);
+            
             return false;
         }
         catch(IllegalAccessException e)
@@ -169,5 +123,34 @@ public class MethodInvokeTest<T, C>
         }
         
         return true;
+    }
+    
+    public void appendParams(PrintWriter errorCallback)
+    {
+        if(methodParams.length > 0)
+        {
+            
+            errorCallback.println("With the following parameters: ");
+            Util.weakSpacer(errorCallback);
+            for(int i = 0; i < methodParams.length; i++)
+            {
+                if(methodParams[i] == null)
+                {
+                    errorCallback.println("null");
+                }
+                else
+                {
+                    Class<?> type = methodTest.getMethodParamsTypes()[i];
+                    String param = methodParams[i].toString();
+                    if(type == String.class)
+                    {
+                        param = "\"" + param + "\"";
+                    }
+                    errorCallback.println(type.getSimpleName() + ": " + param);
+                }
+            }
+            
+            Util.strongSpacer(errorCallback);
+        }
     }
 }

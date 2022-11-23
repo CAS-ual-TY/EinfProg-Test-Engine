@@ -109,13 +109,9 @@ public class Engine
                 test.run();
                 successfulRun = true;
             }
-            catch(Exception e)
+            catch(Throwable e)
             {
-                Util.strongSpacer(pw);
-                pw.println("An error occurred while testing the program:");
-                Util.weakSpacer(pw);
-                e.printStackTrace(pw);
-                Util.strongSpacer(pw);
+                test.onError(e, pw);
             }
             
             if(testFailed)

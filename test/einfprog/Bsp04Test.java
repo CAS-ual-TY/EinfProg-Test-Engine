@@ -140,7 +140,7 @@ public class Bsp04Test
     {
         // #################################### Test isPalindrome(...) ####################################
         
-        String[][] strings = {{"Ana", "Anna", "Tacocat"}, {"Ananas", "Banana", "Alphabet"}, {"Xylophone", "Number1"}, {""}};
+        String[][] strings = {{"ana", "anna", "tacocat"}, {"ananas", "banana", "Alphabet"}, {"xylophone", "number1"}, {""}};
         
         for(int i = 0; i < 2; i++)
         {
@@ -203,11 +203,11 @@ public class Bsp04Test
     {
         Engine.ENGINE.requiresDoesNotFail(this::test1, "Part 1 failed.");
         
-        testPart2(1000, "Alex", "Exemption", "Onward", "No idea");
-        testPart2(1000, "Hello", "Low", "I don't know");
-        testPart2(100, "Super", "Erklaeren", "Engel", "Elend", "Oidaaaaaa waaaas");
-        testPart2(33, "Anna", "Nase", "Sehen", "Endlich", "Chancen", "Entsetzen", "Entfernen");
-        testPart2(30, "Jax", "axiom", "omnipotent", "don't know");
+        testPart2(1000, "alex", "exemption", "onward", "no idea");
+        testPart2(1000, "hello", "low", "i don't know");
+        testPart2(100, "super", "erklaeren", "engel", "elend", "oidaaaaaa waaaas");
+        testPart2(33, "anna", "nase", "sehen", "endlich", "chancen", "entsetzen", "entfernen");
+        testPart2(30, "jax", "axiom", "omnipotent", "don't know");
         testPart2(30, "rotator", "orangutan", "anna", "naturally", "lychee");
         testPart2(30, "erroneous", "usage", "genuine", "nexus", "usa", "sagas", "asunder", "eragon");
     }

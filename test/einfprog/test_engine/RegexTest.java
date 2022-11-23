@@ -87,4 +87,14 @@ public class RegexTest extends OutputTest
         
         Util.strongSpacer(errorCallback);
     }
+    
+    @Override
+    public void onError(Throwable e, PrintWriter errorCallback)
+    {
+        Util.strongSpacer(errorCallback);
+        errorCallback.println("An error occurred while testing the program:");
+        Util.weakSpacer(errorCallback);
+        e.printStackTrace(errorCallback);
+        Util.strongSpacer(errorCallback);
+    }
 }

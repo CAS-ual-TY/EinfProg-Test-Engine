@@ -19,4 +19,6 @@ public abstract class OutputTest
     }
     
     public abstract boolean passes(PrintWriter errorCallback, String rawOutput);
+    
+    public abstract void onError(Throwable e, PrintWriter errorCallback);
 }

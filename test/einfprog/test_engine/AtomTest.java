@@ -1,5 +1,7 @@
 package einfprog.test_engine;
 
+import org.opentest4j.AssertionFailedError;
+
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -27,12 +29,12 @@ public class AtomTest extends OutputTest
     
     public AtomTest(Runnable test, Atom[] input, Compound... output)
     {
-        this("Wrong console output:", test, input, output);
+        this(null, test, input, output);
     }
     
     public AtomTest(MethodInvokeTest<?, ?> methodInvokeTest, Atom[] input, Compound... output)
     {
-        this("Wrong console output when calling method \"" + methodInvokeTest.getMethodName() + "\" in class \"" + methodInvokeTest.getMethodClass().getSimpleName() + "\":",
+        this("When calling method \"" + methodInvokeTest.getMethodName() + "\" in class \"" + methodInvokeTest.getMethodClass().getSimpleName() + "\":",
                 () -> Engine.ENGINE.checkTest(methodInvokeTest), input, output);
         this.methodInvokeTest = methodInvokeTest;
     }
@@ -83,7 +85,13 @@ public class AtomTest extends OutputTest
                 
                 if(!atom.test(substring)) // +size to account for spaces between atoms
                 {
-                    errorCallback.println(error);
+                    errorCallback.println("Wrong console output:");
+                    
+                    if(error != null)
+                    {
+                        errorCallback.println(error);
+                    }
+                    
                     Util.strongSpacer(errorCallback);
                     
                     errorCallback.println("Expected: \"" + atom.toString() + "\"");
@@ -102,41 +110,11 @@ public class AtomTest extends OutputTest
                     errorCallback.println(line);
                     errorCallback.println(" ".repeat(trim + atom.getErrorOffset(substring)) + "^");
                     
-                    if(methodInvokeTest != null && methodInvokeTest.getMethodParams().length > 0)
-                    {
-                        Util.strongSpacer(errorCallback);
-                        
-                        errorCallback.println("With the following parameters: ");
-                        Util.weakSpacer(errorCallback);
-                        for(int i = 0; i < methodInvokeTest.getMethodParams().length; i++)
-                        {
-                            if(methodInvokeTest.getMethodParams()[i] == null)
-                            {
-                                errorCallback.println("null");
-                            }
-                            else
-                            {
-                                Class<?> type = methodInvokeTest.getMethodParamsTypes()[i];
-                                String param = methodInvokeTest.getMethodParams()[i].toString();
-                                if(type == String.class)
-                                {
-                                    param = "\"" + param + "\"";
-                                }
-                                errorCallback.println(type.getSimpleName() + ": " + param);
-                            }
-                        }
-                    }
-                    
-                    if(input.length > 0)
-                    {
-                        Util.strongSpacer(errorCallback);
-                        
-                        errorCallback.println("With the following console input:");
-                        Util.weakSpacer(errorCallback);
-                        Arrays.stream(input).forEach(a -> errorCallback.println(a.toString()));
-                    }
-                    
                     Util.strongSpacer(errorCallback);
+                    
+                    appendParams(errorCallback);
+                    appendInput(errorCallback);
+                    
                     return false;
                 }
                 else
@@ -160,5 +138,56 @@ public class AtomTest extends OutputTest
         }
         
         return true;
+    }
+    
+    public void appendParams(PrintWriter errorCallback)
+    {
+        if(methodInvokeTest != null)
+        {
+            methodInvokeTest.appendParams(errorCallback);
+        }
+    }
+    
+    public void appendInput(PrintWriter errorCallback)
+    {
+        if(input.length > 0)
+        {
+            errorCallback.println("With the following console input:");
+            Util.weakSpacer(errorCallback);
+            Arrays.stream(input).forEach(a -> errorCallback.println(a.toString()));
+            
+            Util.strongSpacer(errorCallback);
+        }
+    }
+    
+    @Override
+    public void onError(Throwable e, PrintWriter errorCallback)
+    {
+        if(!(e instanceof AssertionFailedError))
+        {
+            errorCallback.println("An error occurred:");
+            
+            if(error != null)
+            {
+                errorCallback.println(error);
+            }
+            
+            Util.strongSpacer(errorCallback);
+            
+            errorCallback.println("Exception:");
+            Util.weakSpacer(errorCallback);
+            if(Settings.PRINT_STACKTRACE_ON_ERROR)
+            {
+                e.printStackTrace(errorCallback);
+            }
+            else
+            {
+                errorCallback.println(e.getMessage());
+            }
+            
+            Util.strongSpacer(errorCallback);
+        }
+        
+        appendInput(errorCallback);
     }
 }
