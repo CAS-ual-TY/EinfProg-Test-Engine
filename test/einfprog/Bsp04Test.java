@@ -32,6 +32,7 @@ public class Bsp04Test
         return switch(c)
                 {
                     case 'F', 'H', 'V', 'W', 'Y' -> 4;
+                    case 'K' -> 5;
                     case 'J', 'X' -> 8;
                     case 'Q', 'Z' -> 10;
                     default -> 1;
@@ -64,23 +65,12 @@ public class Bsp04Test
         return sum;
     }
     
+    /*
+     * Basically the same as Bsp04#chainWords, but
+     * - SavitchIn.readLine() replaced by input.removeFirst()
+     * - System.out.print[ln](a + " huh " + b) replaced by output.add(a, " huh ", b) (commas instead of concat!)
+     */
     private int chainWords(int stopPoints, Compound.Builder output, LinkedList<String> input)
-    {
-        int score = chainWords2(stopPoints, output, input);
-        
-        if(score > 0)
-        {
-            output.add("P1 wins with score ", score);
-        }
-        else
-        {
-            output.add("P2 wins with score ", (-score));
-        }
-        
-        return score;
-    }
-    
-    private int chainWords2(int stopPoints, Compound.Builder output, LinkedList<String> input)
     {
         int sum1 = 0;
         int sum2 = 0;
@@ -92,7 +82,7 @@ public class Bsp04Test
             return 0;
         
         sum1 += isPalindrome(w1) ? 2 * wordScore(w1) : wordScore(w1);
-        output.add("P1 score is ", sum1);
+        output.add("P1 score is " + sum1);
         while(sum1 < stopPoints)
         {
             
@@ -104,9 +94,10 @@ public class Bsp04Test
             }
             else
             {
+                sum2 /= 2;
                 break;
             }
-            output.add("P2 score is ", sum2);
+            output.add("P2 score is " + sum2);
             
             if(sum2 >= stopPoints)
             {
@@ -121,11 +112,22 @@ public class Bsp04Test
             }
             else
             {
+                sum1 /= 2;
                 break;
             }
-            output.add("P1 score is ", sum1);
+            output.add("P1 score is " + sum1);
         }
-        return sum1 > sum2 ? sum1 : (-sum2);
+        
+        if(sum1 > sum2)
+        {
+            output.add("P1 wins with score " + sum1);
+            return sum1;
+        }
+        else
+        {
+            output.add("P2 wins with score " + sum2);
+            return -sum2;
+        }
     }
     
     private boolean isChain(String s1, String s2)
@@ -150,9 +152,9 @@ public class Bsp04Test
             {
                 MethodInvokeTest<Boolean, Bsp04> t = new MethodInvokeTest<>(
                         Bsp04.class,
-                        "isPalindrome",
-                        isPalindrome(s),
-                        s
+                        "isPalindrome", // method name
+                        isPalindrome(s), // return value
+                        s // parameters
                 );
                 
                 Engine.ENGINE.checkTest(t);
@@ -184,7 +186,7 @@ public class Bsp04Test
         Compound.Builder output = Compound.builder();
         int ret = chainWords(score, output, inputList);
         
-        MethodInvokeTest<Integer, Bsp04> t = new MethodInvokeTest<Integer, Bsp04>(
+        MethodInvokeTest<Integer, Bsp04> t = new MethodInvokeTest<>(
                 Bsp04.class,
                 "chainWords",
                 ret,
@@ -192,9 +194,12 @@ public class Bsp04Test
         );
         
         AtomTest t1 = new AtomTest(
-                t, Atom.construct((Object[]) input), output.build()
+                t, // method to run (above)
+                Atom.construct((Object[]) input), // console input the program gets (read by SavitchIn)
+                output.build() // what the console output should look like (System.out.print calls)
         );
         
+        // t1 uses t, so no need to check t itself, this is done already
         Engine.ENGINE.checkTest(t1);
     }
     

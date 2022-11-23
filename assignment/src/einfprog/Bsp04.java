@@ -83,6 +83,9 @@ public class Bsp04
                     case 'Y':
                         sum += 4;
                         break;
+                    case 'K':
+                        sum += 5;
+                        break;
                     case 'J':
                     case 'X':
                         sum += 8;
@@ -143,6 +146,7 @@ public class Bsp04
             }
             else
             {
+                sum2 /= 2;
                 break;
             }
             System.out.println("P2 score is " + sum2);
@@ -160,6 +164,7 @@ public class Bsp04
             }
             else
             {
+                sum1 /= 2;
                 break;
             }
             System.out.println("P1 score is " + sum1);
@@ -184,7 +189,7 @@ public class Bsp04
      * @param s2
      * @return
      */
-    public static boolean isChain(String s1, String s2)
+    private static boolean isChain(String s1, String s2)
     {
         int l1 = s1.length();
         int l2 = s2.length();
