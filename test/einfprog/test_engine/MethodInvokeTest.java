@@ -4,21 +4,35 @@ import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class MethodInvokeTest<T, C>
 {
     private MethodTest<T, C> methodTest;
     private C instance;
-    private T acceptedReturnValue;
+    private String returnValueString;
+    private Predicate<T> acceptedReturnValue;
     private Object[] methodParams;
     
-    public MethodInvokeTest(MethodTest<T, C> methodTest, C instance, T acceptedReturnValue, Object... methodParams)
+    public MethodInvokeTest(MethodTest<T, C> methodTest, C instance, String returnValueString, Predicate<T> acceptedReturnValue, Object... methodParams)
     {
         this.methodTest = methodTest;
         this.instance = instance;
+        this.returnValueString = returnValueString;
         this.acceptedReturnValue = acceptedReturnValue;
         this.methodParams = methodParams;
+    }
+    
+    public MethodInvokeTest(MethodTest<T, C> methodTest, String returnValueString, Predicate<T> acceptedReturnValue, Object... methodParams)
+    {
+        this(methodTest, null, returnValueString, acceptedReturnValue, methodParams);
+    }
+    
+    public MethodInvokeTest(MethodTest<T, C> methodTest, C instance, T acceptedReturnValue, Object... methodParams)
+    {
+        this(methodTest, instance, acceptedReturnValue != null ? acceptedReturnValue.toString() : "null", acceptedReturnValue != null ? (acceptedReturnValue.getClass().isArray() ? (x -> x.getClass().isArray() && Arrays.equals((Object[]) acceptedReturnValue, (Object[]) x)) : acceptedReturnValue::equals) : (Objects::isNull), methodParams);
     }
     
     public MethodInvokeTest(MethodTest<T, C> methodTest, T acceptedReturnValue, Object... methodParams)
@@ -81,11 +95,11 @@ public class MethodInvokeTest<T, C>
             
             T value = (T) method.invoke(instance, methodParams);
             
-            if((method.getReturnType() != void.class && acceptedReturnValue == null && value != null) || (acceptedReturnValue != null && !acceptedReturnValue.equals(value)))
+            if((method.getReturnType() == void.class && value != null) || !acceptedReturnValue.test(value))
             {
                 errorCallback.println("Wrong return value when calling method \"" + getMethodName() + "\" in class \"" + getMethodClass().getSimpleName() + "\":");
                 Util.strongSpacer(errorCallback);
-                errorCallback.println("Expected: " + acceptedReturnValue);
+                errorCallback.println("Expected: " + returnValueString);
                 Util.weakSpacer(errorCallback);
                 errorCallback.println("Found: " + value);
                 
