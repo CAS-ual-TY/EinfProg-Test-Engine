@@ -70,7 +70,7 @@ public class SystemTests
                 createArray1(8),
                 8)
         );
-    
+        
         Engine.ENGINE.checkTest(new MethodInvokeTest<>(
                 SystemTests.class,
                 this,
@@ -78,7 +78,7 @@ public class SystemTests
                 createArray2(8),
                 8)
         );
-    
+        
         shouldFail(() ->
                 Engine.ENGINE.checkTest(new MethodInvokeTest<>(
                         SystemTests.class,
@@ -88,7 +88,7 @@ public class SystemTests
                         8)
                 )
         );
-    
+        
         shouldFail(() ->
                 Engine.ENGINE.checkTest(new MethodInvokeTest<>(
                         SystemTests.class,
@@ -98,7 +98,7 @@ public class SystemTests
                         8)
                 )
         );
-    
+        
         shouldFail(() ->
                 Engine.ENGINE.checkTest(new MethodInvokeTest<>(
                         SystemTests.class,

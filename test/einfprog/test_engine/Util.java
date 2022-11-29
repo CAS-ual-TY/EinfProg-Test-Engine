@@ -143,9 +143,9 @@ public class Util
     
     public static Object[] castToObjArray(Object o)
     {
-        if (o instanceof Object[])
+        if(o instanceof Object[])
         {
-            return (Object[])o;
+            return (Object[]) o;
         }
         int length = Array.getLength(o);
         Object[] outputArray = new Object[length];
