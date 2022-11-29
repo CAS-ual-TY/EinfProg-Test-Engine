@@ -1,6 +1,8 @@
 package einfprog.test_engine;
 
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -137,6 +139,56 @@ public class Util
     public static boolean doubleEquals(Matcher matcher, String groupName, double value)
     {
         return doubleEquals(matcher, groupName, value, Settings.DEFAULT_DOUBLE_ERROR);
+    }
+    
+    public static Object[] castToObjArray(Object o)
+    {
+        if (o instanceof Object[])
+        {
+            return (Object[])o;
+        }
+        int length = Array.getLength(o);
+        Object[] outputArray = new Object[length];
+        for(int i = 0; i < length; ++i)
+        {
+            outputArray[i] = Array.get(o, i);
+        }
+        return outputArray;
+    }
+    
+    public static <T> Predicate<T> arraysEqualsPredicate(T t)
+    {
+        return x -> arraysEquals(t, x);
+    }
+    
+    public static boolean arraysEquals(Object t, Object x)
+    {
+        if(t.getClass().isArray() != x.getClass().isArray())
+        {
+            return false;
+        }
+        
+        Object[] ts = castToObjArray(t);
+        Object[] xs = castToObjArray(x);
+        
+        if(ts.length != xs.length)
+        {
+            return false;
+        }
+        
+        for(int i = 0; i < ts.length; i++)
+        {
+            if((ts[i] == null || xs[i] == null) && ts[i] != xs[i])
+            {
+                return false;
+            }
+            if(!ts[i].equals(xs[i]))
+            {
+                return false;
+            }
+        }
+        
+        return true;
     }
     
     public static Class<?> unboxClass(Class<?> o)

@@ -32,7 +32,7 @@ public class MethodInvokeTest<T, C>
     
     public MethodInvokeTest(MethodTest<T, C> methodTest, C instance, T acceptedReturnValue, Object... methodParams)
     {
-        this(methodTest, instance, acceptedReturnValue != null ? acceptedReturnValue.toString() : "null", acceptedReturnValue != null ? (acceptedReturnValue.getClass().isArray() ? (x -> x.getClass().isArray() && Arrays.equals((Object[]) acceptedReturnValue, (Object[]) x)) : acceptedReturnValue::equals) : (Objects::isNull), methodParams);
+        this(methodTest, instance, acceptedReturnValue != null ? acceptedReturnValue.toString() : "null", acceptedReturnValue != null ? (acceptedReturnValue.getClass().isArray() ? Util.arraysEqualsPredicate(acceptedReturnValue) : acceptedReturnValue::equals) : (Objects::isNull), methodParams);
     }
     
     public MethodInvokeTest(MethodTest<T, C> methodTest, T acceptedReturnValue, Object... methodParams)
