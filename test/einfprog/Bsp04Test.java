@@ -154,7 +154,7 @@ public class Bsp04Test
                         Bsp04.class,
                         "isPalindrome", // method name
                         isPalindrome(s), // return value
-                        s // parameters
+                        Util.objArr(s) // parameters
                 );
                 
                 Engine.ENGINE.checkTest(t);
@@ -171,7 +171,7 @@ public class Bsp04Test
                         Bsp04.class,
                         "wordScore",
                         wordScore(s),
-                        s
+                        Util.objArr(s)
                 );
                 
                 Engine.ENGINE.checkTest(t);
@@ -190,7 +190,7 @@ public class Bsp04Test
                 Bsp04.class,
                 "chainWords",
                 ret,
-                score
+                Util.objArr(score)
         );
         
         AtomTest t1 = new AtomTest(

@@ -2,15 +2,20 @@ package einfprog.test_engine;
 
 import java.io.PrintWriter;
 import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Util
 {
     public static final String DOUBLE_REGEX;
     public static final String INT_REGEX = "[+-]?[1-9][0-9]*";
+    
+    public static final Object[] EMPTY_OBJ_ARR = new Object[0];
     
     static
     {
@@ -147,12 +152,15 @@ public class Util
         {
             return (Object[]) o;
         }
+        
         int length = Array.getLength(o);
         Object[] outputArray = new Object[length];
+        
         for(int i = 0; i < length; ++i)
         {
             outputArray[i] = Array.get(o, i);
         }
+        
         return outputArray;
     }
     
@@ -161,13 +169,53 @@ public class Util
         return x -> arraysEquals(t, x);
     }
     
-    public static boolean arraysEquals(Object t, Object x)
+    public static String objectToString(Object t)
     {
-        if(t.getClass().isArray() != x.getClass().isArray())
+        if(t == null)
+        {
+            return "null";
+        }
+        else if(t.getClass().isArray())
+        {
+            return arraysToString(t);
+        }
+        else
+        {
+            return t.toString();
+        }
+    }
+    
+    public static String arraysToString(Object t)
+    {
+        return "[" + Arrays.stream(castToObjArray(t)).map(Objects::toString).collect(Collectors.joining(", ")) + "]";
+    }
+    
+    public static boolean objectsEquals(Object t, Object x)
+    {
+        if(t == x)
+        {
+            return true;
+        }
+        else if(t == null || x == null)
         {
             return false;
         }
-        
+        else if(t.getClass().isArray() != x.getClass().isArray())
+        {
+            return false;
+        }
+        else if(t.getClass().isArray())
+        {
+            return arraysEquals(t, x);
+        }
+        else
+        {
+            return t.equals(x);
+        }
+    }
+    
+    public static boolean arraysEquals(Object t, Object x)
+    {
         Object[] ts = castToObjArray(t);
         Object[] xs = castToObjArray(x);
         
@@ -227,6 +275,16 @@ public class Util
         }
         
         return o;
+    }
+    
+    public static <T> Object[] objArr(T o)
+    {
+        return new Object[] {o};
+    }
+    
+    public static Object[] objArr(Object... arr)
+    {
+        return arr;
     }
     
     public static Runnable suppressClassloading(Supplier<Runnable> supplier)

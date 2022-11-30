@@ -145,14 +145,14 @@ public class Bsp03Test
                         Bsp03.class,
                         "isMaexchen",
                         groessererWert(w1, w2) == 21,
-                        w1, w2
+                        Util.objArr(w1, w2)
                 );
                 
                 MethodInvokeTest<Boolean, Bsp03> t2 = new MethodInvokeTest<>(
                         Bsp03.class,
                         "isPair",
                         w1 == w2,
-                        w1, w2
+                        Util.objArr(w1, w2)
                 );
                 
                 Engine.ENGINE.checkTest(t1);
@@ -186,7 +186,7 @@ public class Bsp03Test
                     Bsp03.class,
                     "maexchen",
                     null,
-                    wuerfe
+                    Util.objArr(wuerfe)
             );
             
             AtomTest t2 = new AtomTest(t1, output.build());

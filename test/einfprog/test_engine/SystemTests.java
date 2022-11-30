@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+
 public class SystemTests
 {
     public int[] createArray1(int length)
@@ -46,6 +49,11 @@ public class SystemTests
         return a;
     }
     
+    public int testArray(int[] array)
+    {
+        return Arrays.stream(array).findFirst().orElse(0);
+    }
+    
     @Test
     public void testStringUtils()
     {
@@ -68,16 +76,34 @@ public class SystemTests
                 this,
                 "createArray1",
                 createArray1(8),
-                8)
+                Util.objArr(8))
         );
-        
+    
         Engine.ENGINE.checkTest(new MethodInvokeTest<>(
                 SystemTests.class,
                 this,
                 "createArray2",
                 createArray2(8),
-                8)
+                Util.objArr(8))
         );
+    
+        Engine.ENGINE.checkTest(new MethodInvokeTest<>(
+                SystemTests.class,
+                this,
+                "testArray",
+                Modifier.PUBLIC,
+                testArray(createArray1(8)),
+                Util.objArr(createArray1(8))
+        ));
+        
+        shouldFail(() ->
+                Engine.ENGINE.checkTest(new MethodInvokeTest<>(
+                        SystemTests.class,
+                        this,
+                        "createArray1",
+                        createArray2(8),
+                        Util.objArr(8))
+                ));
         
         shouldFail(() ->
                 Engine.ENGINE.checkTest(new MethodInvokeTest<>(
@@ -85,7 +111,7 @@ public class SystemTests
                         this,
                         "createArray1",
                         createArray3(8),
-                        8)
+                        Util.objArr(8))
                 )
         );
         
@@ -95,7 +121,7 @@ public class SystemTests
                         this,
                         "createArray1",
                         createArray4(8),
-                        8)
+                        Util.objArr(8))
                 )
         );
         
@@ -105,7 +131,7 @@ public class SystemTests
                         this,
                         "createArray1",
                         null,
-                        8)
+                        Util.objArr(8))
                 )
         );
     }
@@ -118,6 +144,7 @@ public class SystemTests
         }
         catch(AssertionFailedError e)
         {
+            e.printStackTrace();
             return;
         }
         

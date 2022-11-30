@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -16,7 +17,7 @@ public class MethodInvokeTest<T, C>
     private Predicate<T> acceptedReturnValue;
     private Object[] methodParams;
     
-    public MethodInvokeTest(MethodTest<T, C> methodTest, C instance, String returnValueString, Predicate<T> acceptedReturnValue, Object... methodParams)
+    public MethodInvokeTest(MethodTest<T, C> methodTest, C instance, String returnValueString, Predicate<T> acceptedReturnValue, Object[] methodParams)
     {
         this.methodTest = methodTest;
         this.instance = instance;
@@ -25,36 +26,61 @@ public class MethodInvokeTest<T, C>
         this.methodParams = methodParams;
     }
     
-    public MethodInvokeTest(MethodTest<T, C> methodTest, String returnValueString, Predicate<T> acceptedReturnValue, Object... methodParams)
+    public MethodInvokeTest(MethodTest<T, C> methodTest, C instance, String returnValueString, Predicate<T> acceptedReturnValue)
     {
-        this(methodTest, null, returnValueString, acceptedReturnValue, methodParams);
+        this(methodTest, instance, returnValueString, acceptedReturnValue, Util.EMPTY_OBJ_ARR);
     }
     
-    public MethodInvokeTest(MethodTest<T, C> methodTest, C instance, T acceptedReturnValue, Object... methodParams)
+    public MethodInvokeTest(MethodTest<T, C> methodTest, C instance, T acceptedReturnValue, Object[] methodParams)
     {
-        this(methodTest, instance, acceptedReturnValue != null ? acceptedReturnValue.toString() : "null", acceptedReturnValue != null ? (acceptedReturnValue.getClass().isArray() ? Util.arraysEqualsPredicate(acceptedReturnValue) : acceptedReturnValue::equals) : (Objects::isNull), methodParams);
+        this(methodTest, instance, Util.objectToString(acceptedReturnValue), returnValue -> Util.objectsEquals(acceptedReturnValue, returnValue), methodParams);
     }
     
-    public MethodInvokeTest(MethodTest<T, C> methodTest, T acceptedReturnValue, Object... methodParams)
+    public MethodInvokeTest(MethodTest<T, C> methodTest, C instance, T acceptedReturnValue)
+    {
+        this(methodTest, instance, acceptedReturnValue, Util.EMPTY_OBJ_ARR);
+    }
+    
+    public MethodInvokeTest(MethodTest<T, C> methodTest, T acceptedReturnValue, Object[] methodParams)
     {
         this(methodTest, null, acceptedReturnValue, methodParams);
     }
     
-    public MethodInvokeTest(Class<C> clazz, C instance, String methodName, int methodModifiers, T acceptedReturnValue, Object... methodParams)
+    public MethodInvokeTest(MethodTest<T, C> methodTest, T acceptedReturnValue)
+    {
+        this(methodTest, acceptedReturnValue, Util.EMPTY_OBJ_ARR);
+    }
+    
+    public MethodInvokeTest(Class<C> clazz, C instance, String methodName, int methodModifiers, T acceptedReturnValue, Object[] methodParams)
     {
         this(new MethodTest<>(clazz, instance, methodName, methodModifiers, acceptedReturnValue != null ? Util.unboxClass(acceptedReturnValue.getClass()) : void.class, Arrays.stream(methodParams).map(Object::getClass).map(Util::unboxClass).toArray(Class<?>[]::new)),
                 instance, acceptedReturnValue, methodParams);
     }
     
-    public MethodInvokeTest(Class<C> clazz, C instance, String methodName, T acceptedReturnValue, Object... methodParams)
+    public MethodInvokeTest(Class<C> clazz, C instance, String methodName, int methodModifiers, T acceptedReturnValue)
+    {
+        this(clazz, instance, methodName, methodModifiers, acceptedReturnValue, Util.EMPTY_OBJ_ARR);
+    }
+    
+    public MethodInvokeTest(Class<C> clazz, C instance, String methodName, T acceptedReturnValue, Object[] methodParams)
     {
         this(new MethodTest<>(clazz, instance, methodName, acceptedReturnValue != null ? Util.unboxClass(acceptedReturnValue.getClass()) : void.class, Arrays.stream(methodParams).map(Object::getClass).map(Util::unboxClass).toArray(Class<?>[]::new)),
                 instance, acceptedReturnValue, methodParams);
     }
     
-    public MethodInvokeTest(Class<C> clazz, String methodName, T acceptedReturnValue, Object... methodParams)
+    public MethodInvokeTest(Class<C> clazz, C instance, String methodName, T acceptedReturnValue)
+    {
+        this(clazz, instance, methodName, acceptedReturnValue, Util.EMPTY_OBJ_ARR);
+    }
+    
+    public MethodInvokeTest(Class<C> clazz, String methodName, T acceptedReturnValue, Object[] methodParams)
     {
         this(clazz, null, methodName, acceptedReturnValue, methodParams);
+    }
+    
+    public MethodInvokeTest(Class<C> clazz, String methodName, T acceptedReturnValue)
+    {
+        this(clazz, methodName, acceptedReturnValue, Util.EMPTY_OBJ_ARR);
     }
     
     public Class<C> getMethodClass()
@@ -101,7 +127,7 @@ public class MethodInvokeTest<T, C>
                 Util.strongSpacer(errorCallback);
                 errorCallback.println("Expected: " + returnValueString);
                 Util.weakSpacer(errorCallback);
-                errorCallback.println("Found: " + value);
+                errorCallback.println("Found: " + Util.objectToString(value));
                 
                 Util.strongSpacer(errorCallback);
                 
@@ -155,7 +181,7 @@ public class MethodInvokeTest<T, C>
                 else
                 {
                     Class<?> type = methodTest.getMethodParamsTypes()[i];
-                    String param = methodParams[i].toString();
+                    String param = Util.objectToString(methodParams[i]);
                     if(type == String.class)
                     {
                         param = "\"" + param + "\"";

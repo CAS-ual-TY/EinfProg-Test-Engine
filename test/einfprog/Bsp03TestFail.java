@@ -236,7 +236,7 @@ public class Bsp03TestFail
                     Bsp03.class,
                     "isMaexchen",
                     error != 5,
-                    w1, w2
+                    Util.objArr(w1, w2)
             );
             
             try
