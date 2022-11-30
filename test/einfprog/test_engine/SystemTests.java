@@ -78,7 +78,7 @@ public class SystemTests
                 createArray1(8),
                 Util.objArr(8))
         );
-    
+        
         Engine.ENGINE.checkTest(new MethodInvokeTest<>(
                 SystemTests.class,
                 this,
@@ -86,7 +86,7 @@ public class SystemTests
                 createArray2(8),
                 Util.objArr(8))
         );
-    
+        
         Engine.ENGINE.checkTest(new MethodInvokeTest<>(
                 SystemTests.class,
                 this,
