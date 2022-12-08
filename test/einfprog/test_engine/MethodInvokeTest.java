@@ -152,6 +152,8 @@ public class MethodInvokeTest<T, C>
             
             Util.strongSpacer(errorCallback);
             
+            appendParams(errorCallback);
+            
             return false;
         }
         catch(IllegalAccessException e)

@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
@@ -200,13 +201,21 @@ public class Util
         {
             return false;
         }
-        else if(t.getClass().isArray() != x.getClass().isArray())
+        else if(t.getClass() != x.getClass())
         {
             return false;
         }
         else if(t.getClass().isArray())
         {
             return arraysEquals(t, x);
+        }
+        else if(t.getClass() == Double.class)
+        {
+            return doubleEquals((double) t, (double) x);
+        }
+        else if(t.getClass() == Float.class)
+        {
+            return doubleEquals((float) t, (float) x);
         }
         else
         {
@@ -223,6 +232,21 @@ public class Util
         {
             return false;
         }
+        else if(ts.length == 0)
+        {
+            return true;
+        }
+        
+        BiPredicate<Object, Object> comparator = Object::equals;
+        
+        if(t.getClass() == double[].class || t.getClass() == Double[].class)
+        {
+            comparator = (d1, d2) -> doubleEquals((double) d1, (double) d2);
+        }
+        else if(t.getClass() == float[].class || t.getClass() == Float[].class)
+        {
+            comparator = (f1, f2) -> doubleEquals((float) f1, (float) f2);
+        }
         
         for(int i = 0; i < ts.length; i++)
         {
@@ -230,7 +254,7 @@ public class Util
             {
                 return false;
             }
-            if(!ts[i].equals(xs[i]))
+            else if(!comparator.test(xs[i], ts[i]))
             {
                 return false;
             }
