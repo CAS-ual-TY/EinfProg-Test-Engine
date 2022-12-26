@@ -131,7 +131,7 @@ public class Engine
                 Assertions.fail(sw.toString());
                 return false;
             }
-    
+            
             test.appendFeedback(pw);
             unusedFeedback.accept(sw.toString());
             return true;

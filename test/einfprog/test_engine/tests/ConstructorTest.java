@@ -111,7 +111,7 @@ public class ConstructorTest<C, P extends IParamTypeSet> extends TestBase implem
     public void doAppendFeedback(PrintWriter errorCallback)
     {
         clazz.appendFeedback(errorCallback);
-    
+        
         errorCallback.println("After invoking constructor:");
         Util.weakSpacer(errorCallback);
         errorCallback.println(constructorToString());

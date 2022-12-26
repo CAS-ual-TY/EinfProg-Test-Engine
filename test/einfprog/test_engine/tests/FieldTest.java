@@ -57,7 +57,7 @@ public class FieldTest<C, T> extends TestBase implements IFieldInvoker<C, T>
                 eWrongModifiers(modifiers, errorCallback);
                 return false;
             }
-    
+            
             Class<?> type = field.getType();
             if(type != fieldType)
             {

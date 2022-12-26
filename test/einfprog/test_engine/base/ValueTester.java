@@ -55,7 +55,7 @@ public class ValueTester<T> extends TestBase implements IValueTester<T>
         errorCallback.println(expected);
         
         Util.strongSpacer(errorCallback);
-    
+        
         this.value.appendFeedback(errorCallback);
     }
     
