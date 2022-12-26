@@ -170,6 +170,8 @@ public class TestMaker<C, T, PC extends IParamTypeSet, PM extends IParamTypeSet>
                 {
                     errorCallback.println(stackedFeedback.toString());
                 });
+        input = new Atom[0];
+        output = new Compound[0];
         return this;
     }
     
