@@ -1,6 +1,11 @@
 package einfprog;
 
 import einfprog.test_engine.*;
+import einfprog.test_engine.output.Atom;
+import einfprog.test_engine.output.Compound;
+import einfprog.test_engine.params.ParamSet2;
+import einfprog.test_engine.params.ParamTypeSet1;
+import einfprog.test_engine.TestMaker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
@@ -220,30 +225,30 @@ public class Bsp03TestFail
             PRNG.randomize(seed);
             
             final int finalError = error;
-            AtomTest t1 = new AtomTest(() -> testRun(finalError),
-                    Atom.construct(maxPaare, maxMaexchen, wuerfe),
-                    output.build()
-            );
-            
-            MethodTest<Integer, Bsp03TestFail> t2 = new MethodTest<>(
-                    Bsp03TestFail.class, error == 3 || error == 4 ? null : this, "rollDieTest", (error == 3 || error == 4 ? Modifier.STATIC : 0) + (error == 2 || error == 4 ? Modifier.PUBLIC : Modifier.PRIVATE), int.class
-            );
             
             int w1 = 1;
             int w2 = 2;
             
-            MethodInvokeTest<Boolean, Bsp03> t3 = new MethodInvokeTest<>(
-                    Bsp03.class,
-                    "isMaexchen",
-                    error != 5,
-                    Util.objArr(w1, w2)
-            );
-            
             try
             {
-                Engine.ENGINE.checkTest(t1);
-                Engine.ENGINE.checkTest(t2);
-                Engine.ENGINE.checkTest(t3);
+                TestMaker.builder()
+                        .run(() -> testRun(finalError))
+                        .withConsoleInput(Atom.construct(maxPaare, maxMaexchen, wuerfe))
+                        .withConsoleOutput(output.build())
+                        .runTest();
+                
+                TestMaker.builder()
+                        .withClass(getClass())
+                        .withDirectInstance(error == 3 || error == 4 ? null : this)
+                        .checkMethod("rollDieTest", (error == 3 || error == 4 ? Modifier.STATIC : 0) + (error == 2 || error == 4 ? Modifier.PUBLIC : Modifier.PRIVATE), int.class, new ParamTypeSet1(int.class))
+                        .runTest();
+                
+                TestMaker.builder()
+                        .withClass("einfprog.Bsp03")
+                        .statically()
+                        .callMethod("isMaexchen", boolean.class, new ParamSet2<>(w1, w2))
+                        .testValue(error != 5)
+                        .runTest();
                 
                 if(error > 0)
                 {

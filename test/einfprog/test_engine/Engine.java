@@ -1,11 +1,14 @@
 package einfprog.test_engine;
 
+import einfprog.test_engine.base.IFeedback;
+import einfprog.test_engine.base.IOutputProcessor;
 import org.junit.jupiter.api.Assertions;
 import org.opentest4j.AssertionFailedError;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 public class Engine
 {
@@ -94,82 +97,43 @@ public class Engine
         }
     }
     
-    public boolean checkTest(OutputTest test)
+    public boolean checkTest(IFeedback test, IOutputProcessor outputProcessor, Consumer<String> unusedFeedback, Consumer<PrintWriter> errorCallback)
     {
         beforeEach();
         
         try
         {
-            sendInput(test.getInput());
+            sendInput(outputProcessor.getInput());
             
             boolean successfulRun = false;
             
             try
             {
-                test.run();
-                successfulRun = true;
+                successfulRun = test.test(pw);
             }
             catch(Throwable e)
             {
-                test.onError(e, pw);
-            }
-            
-            if(testFailed)
-            {
-                return false;
+                Util.error(pw, e);
             }
             
             String rawOut = getRawOutput();
             
-            if(!successfulRun || !test.passes(pw, rawOut))
+            if(!successfulRun)
             {
+                errorCallback.accept(pw);
                 Assertions.fail(sw.toString());
-                testFailed = true;
                 return false;
             }
-            
-            return true;
-        }
-        finally
-        {
-            afterEach();
-        }
-    }
+            else if(!outputProcessor.testOutput(pw, rawOut))
+            {
+                test.appendFeedback(pw);
+                errorCallback.accept(pw);
+                Assertions.fail(sw.toString());
+                return false;
+            }
     
-    public <C, T> boolean checkTest(MethodTest<C, T> test)
-    {
-        beforeEach();
-        
-        try
-        {
-            if(!test.hasMethod(pw))
-            {
-                Assertions.fail(sw.toString());
-                testFailed = true;
-                return false;
-            }
-            
-            return true;
-        }
-        finally
-        {
-            afterEach();
-        }
-    }
-    
-    public <C, T> boolean checkTest(MethodInvokeTest<C, T> test)
-    {
-        beforeEach();
-        
-        try
-        {
-            if(!test.testValue(pw))
-            {
-                Assertions.fail(sw.toString());
-                testFailed = true;
-                return false;
-            }
-            
+            test.appendFeedback(pw);
+            unusedFeedback.accept(sw.toString());
             return true;
         }
         finally

@@ -1,4 +1,4 @@
-package einfprog.test_engine;
+package einfprog.test_engine.output;
 
 import java.util.LinkedList;
 import java.util.List;

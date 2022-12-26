@@ -1,6 +1,11 @@
 package einfprog;
 
-import einfprog.test_engine.*;
+import einfprog.test_engine.output.Atom;
+import einfprog.test_engine.output.Compound;
+import einfprog.test_engine.params.ParamSet0;
+import einfprog.test_engine.params.ParamSet1;
+import einfprog.test_engine.params.ParamSet2;
+import einfprog.test_engine.TestMaker;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
@@ -106,12 +111,10 @@ public class Bsp03Test
             // RESET PRNG
             PRNG.randomize(seed);
             
-            AtomTest t = new AtomTest(() -> Bsp03.main(new String[] {}),
-                    Atom.construct(maxPaare, maxMaexchen),
-                    output.build()
-            );
-            
-            Engine.ENGINE.checkTest(t);
+            TestMaker.callMain("einfprog.Bsp03")
+                    .withConsoleInput(Atom.construct(maxPaare, maxMaexchen))
+                    .withConsoleOutput(output.build())
+                    .runTest();
         }
         
         // #################################### Test rollDie() ####################################
@@ -127,13 +130,12 @@ public class Bsp03Test
             // RESET PRNG
             PRNG.randomize(seed);
             
-            MethodInvokeTest<Integer, Bsp03> t = new MethodInvokeTest<>(
-                    Bsp03.class,
-                    "rollDie",
-                    result
-            );
-            
-            Engine.ENGINE.checkTest(t);
+            TestMaker.builder()
+                    .withClass("einfprog.Bsp03")
+                    .statically()
+                    .callMethod("rollDie", int.class, new ParamSet0())
+                    .testValue(result)
+                    .runTest();
         }
         
         // #################################### Test isMaexchen(...) & isPair(...) ####################################
@@ -141,22 +143,20 @@ public class Bsp03Test
         {
             for(int w2 = 1; w2 <= 6; w2++)
             {
-                MethodInvokeTest<Boolean, Bsp03> t1 = new MethodInvokeTest<>(
-                        Bsp03.class,
-                        "isMaexchen",
-                        groessererWert(w1, w2) == 21,
-                        Util.objArr(w1, w2)
-                );
                 
-                MethodInvokeTest<Boolean, Bsp03> t2 = new MethodInvokeTest<>(
-                        Bsp03.class,
-                        "isPair",
-                        w1 == w2,
-                        Util.objArr(w1, w2)
-                );
-                
-                Engine.ENGINE.checkTest(t1);
-                Engine.ENGINE.checkTest(t2);
+                TestMaker.builder()
+                        .withClass("einfprog.Bsp03")
+                        .statically()
+                        .callMethod("isMaexchen", boolean.class, new ParamSet2<>(w1, w2))
+                        .testValue(groessererWert(w1, w2) == 21)
+                        .runTest();
+    
+                TestMaker.builder()
+                        .withClass("einfprog.Bsp03")
+                        .statically()
+                        .callMethod("isPair", boolean.class, new ParamSet2<>(w1, w2))
+                        .testValue(w1 == w2)
+                        .runTest();
             }
         }
     }
@@ -182,19 +182,12 @@ public class Bsp03Test
             // RESET PRNG
             PRNG.randomize(seed);
             
-            MethodInvokeTest<Void, Bsp03> t1 = new MethodInvokeTest<>(
-                    Bsp03.class,
-                    "maexchen",
-                    null,
-                    Util.objArr(wuerfe)
-            );
-            
-            AtomTest t2 = new AtomTest(t1, output.build());
-            
-            if(!Engine.ENGINE.checkTest(t2))
-            {
-                return;
-            }
+            TestMaker.builder()
+                    .withClass("einfprog.Bsp03")
+                    .statically()
+                    .callMethod("maexchen", void.class, new ParamSet1<>(wuerfe))
+                    .withConsoleOutput(output.build())
+                    .runTest();
         }
         
         // #################################### Test part2 main(...) ####################################
@@ -220,15 +213,10 @@ public class Bsp03Test
             // RESET PRNG
             PRNG.randomize(seed);
             
-            AtomTest t = new AtomTest(() -> Bsp03.main(new String[] {}),
-                    Atom.construct(maxPaare, maxMaexchen, wuerfe),
-                    output.build()
-            );
-            
-            if(!Engine.ENGINE.checkTest(t))
-            {
-                return;
-            }
+            TestMaker.callMain("einfprog.Bsp03")
+                    .withConsoleInput(Atom.construct(maxPaare, maxMaexchen, wuerfe))
+                    .withConsoleOutput(output.build())
+                    .runTest();
         }
     }
 }

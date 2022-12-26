@@ -1,47 +1,24 @@
-package einfprog.test_engine;
+package einfprog.test_engine.tests;
 
-import org.opentest4j.AssertionFailedError;
+import einfprog.test_engine.Util;
+import einfprog.test_engine.base.IOutputProcessor;
+import einfprog.test_engine.output.Atom;
+import einfprog.test_engine.output.Compound;
 
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.stream.Collectors;
 
-public class AtomTest extends OutputTest
+public class AtomTest implements IOutputProcessor
 {
-    private String error;
     private Atom[] input;
-    private Compound[] lines;
+    private Compound[] expected;
     
-    private Runnable test;
-    
-    private MethodInvokeTest<?, ?> methodInvokeTest;
-    
-    public AtomTest(String error, Runnable test, Atom[] input, Compound... output)
+    public AtomTest(Atom[] input, Compound... output)
     {
-        super(test);
-        this.error = error;
         this.input = input;
-        lines = output;
-        
-        methodInvokeTest = null;
-    }
-    
-    public AtomTest(Runnable test, Atom[] input, Compound... output)
-    {
-        this(null, test, input, output);
-    }
-    
-    public AtomTest(MethodInvokeTest<?, ?> methodInvokeTest, Atom[] input, Compound... output)
-    {
-        this("When calling method \"" + methodInvokeTest.getMethodName() + "\" in class \"" + methodInvokeTest.getMethodClass().getSimpleName() + "\":",
-                () -> Engine.ENGINE.checkTest(methodInvokeTest), input, output);
-        this.methodInvokeTest = methodInvokeTest;
-    }
-    
-    public AtomTest(MethodInvokeTest<?, ?> methodInvokeTest, Compound... output)
-    {
-        this(methodInvokeTest, Atom.construct(), output);
+        expected = output;
     }
     
     @Override
@@ -51,11 +28,11 @@ public class AtomTest extends OutputTest
     }
     
     @Override
-    public boolean passes(PrintWriter errorCallback, String rawOutput)
+    public boolean testOutput(PrintWriter errorCallback, String rawOutput)
     {
         String[] outputLines = Util.prepareOutput(rawOutput);
         
-        LinkedList<Compound> compounds = new LinkedList<>(Arrays.asList(lines));
+        LinkedList<Compound> compounds = new LinkedList<>(Arrays.asList(expected));
         LinkedList<String> lines = new LinkedList<>(Arrays.asList(outputLines));
         
         // make sure there is no IndexOutOfBoundsException
@@ -86,12 +63,6 @@ public class AtomTest extends OutputTest
                 if(!atom.test(substring)) // +size to account for spaces between atoms
                 {
                     errorCallback.println("Wrong console output:");
-                    
-                    if(error != null)
-                    {
-                        errorCallback.println(error);
-                    }
-                    
                     Util.strongSpacer(errorCallback);
                     
                     errorCallback.println("Expected: \"" + atom.toString() + "\"");
@@ -112,7 +83,6 @@ public class AtomTest extends OutputTest
                     
                     Util.strongSpacer(errorCallback);
                     
-                    appendParams(errorCallback);
                     appendInput(errorCallback);
                     
                     return false;
@@ -140,14 +110,6 @@ public class AtomTest extends OutputTest
         return true;
     }
     
-    public void appendParams(PrintWriter errorCallback)
-    {
-        if(methodInvokeTest != null)
-        {
-            methodInvokeTest.appendParams(errorCallback);
-        }
-    }
-    
     public void appendInput(PrintWriter errorCallback)
     {
         if(input.length > 0)
@@ -158,36 +120,5 @@ public class AtomTest extends OutputTest
             
             Util.strongSpacer(errorCallback);
         }
-    }
-    
-    @Override
-    public void onError(Throwable e, PrintWriter errorCallback)
-    {
-        if(!(e instanceof AssertionFailedError))
-        {
-            errorCallback.println("An error occurred:");
-            
-            if(error != null)
-            {
-                errorCallback.println(error);
-            }
-            
-            Util.strongSpacer(errorCallback);
-            
-            errorCallback.println("Exception:");
-            Util.weakSpacer(errorCallback);
-            if(Settings.PRINT_STACKTRACE_ON_ERROR)
-            {
-                e.printStackTrace(errorCallback);
-            }
-            else
-            {
-                errorCallback.println(e.getMessage());
-            }
-            
-            Util.strongSpacer(errorCallback);
-        }
-        
-        appendInput(errorCallback);
     }
 }

@@ -1,6 +1,10 @@
 package einfprog;
 
-import einfprog.test_engine.*;
+import einfprog.test_engine.output.Atom;
+import einfprog.test_engine.output.Compound;
+import einfprog.test_engine.params.ParamSet1;
+import einfprog.test_engine.Engine;
+import einfprog.test_engine.TestMaker;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -150,14 +154,13 @@ public class Bsp04Test
             
             for(String s : ss)
             {
-                MethodInvokeTest<Boolean, Bsp04> t = new MethodInvokeTest<>(
-                        Bsp04.class,
-                        "isPalindrome", // method name
-                        isPalindrome(s), // return value
-                        Util.objArr(s) // parameters
-                );
                 
-                Engine.ENGINE.checkTest(t);
+                TestMaker.builder()
+                        .withClass("einfprog.Bsp04")
+                        .statically()
+                        .callMethod("isPalindrome", boolean.class, new ParamSet1<>(s))
+                        .testValue(isPalindrome(s))
+                        .runTest();
             }
         }
         
@@ -167,14 +170,12 @@ public class Bsp04Test
         {
             for(String s : ss)
             {
-                MethodInvokeTest<Integer, Bsp04> t = new MethodInvokeTest<>(
-                        Bsp04.class,
-                        "wordScore",
-                        wordScore(s),
-                        Util.objArr(s)
-                );
-                
-                Engine.ENGINE.checkTest(t);
+                TestMaker.builder()
+                        .withClass("einfprog.Bsp04")
+                        .statically()
+                        .callMethod("wordScore", int.class, new ParamSet1<>(s))
+                        .testValue(wordScore(s))
+                        .runTest();
             }
         }
     }
@@ -186,21 +187,14 @@ public class Bsp04Test
         Compound.Builder output = Compound.builder();
         int ret = chainWords(score, output, inputList);
         
-        MethodInvokeTest<Integer, Bsp04> t = new MethodInvokeTest<>(
-                Bsp04.class,
-                "chainWords",
-                ret,
-                Util.objArr(score)
-        );
-        
-        AtomTest t1 = new AtomTest(
-                t, // method to run (above)
-                Atom.construct((Object[]) input), // console input the program gets (read by SavitchIn)
-                output.build() // what the console output should look like (System.out.print calls)
-        );
-        
-        // t1 uses t, so no need to check t itself, this is done already
-        Engine.ENGINE.checkTest(t1);
+        TestMaker.builder()
+                .withClass("einfprog.Bsp04")
+                .statically()
+                .callMethod("chainWords", int.class, new ParamSet1<>(score))
+                .testValue(ret)
+                .withConsoleInput(Atom.construct((Object[]) input))
+                .withConsoleOutput(output.build())
+                .runTest();
     }
     
     @Test

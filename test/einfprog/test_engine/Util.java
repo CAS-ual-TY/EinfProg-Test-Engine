@@ -315,4 +315,11 @@ public class Util
     {
         return supplier.get();
     }
+    
+    public static void error(PrintWriter errorCallback, Throwable e)
+    {
+        errorCallback.println("Something went wrong... Please report this error.");
+        weakSpacer(errorCallback);
+        e.printStackTrace(errorCallback);
+    }
 }

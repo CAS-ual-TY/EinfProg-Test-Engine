@@ -1,9 +1,8 @@
 package einfprog;
 
-import einfprog.test_engine.Atom;
-import einfprog.test_engine.AtomTest;
-import einfprog.test_engine.Compound;
-import einfprog.test_engine.Engine;
+import einfprog.test_engine.output.Atom;
+import einfprog.test_engine.output.Compound;
+import einfprog.test_engine.TestMaker;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -39,13 +38,12 @@ public class Bsp02Test
         {
             String note = note(punkte);
             
-            AtomTest t = new AtomTest(() -> Bsp02.main(new String[] {}),
-                    Atom.construct(punkte),
-                    Compound.construct("? Erreichte Punkte [0-120]: "),
-                    Compound.construct(note)
-            );
-            
-            Engine.ENGINE.checkTest(t);
+            TestMaker.callMain("einfprog.Bsp02")
+                    .withConsoleInput(Atom.construct(punkte))
+                    .withConsoleOutput(
+                            Compound.construct("? Erreichte Punkte [0-120]: "),
+                            Compound.construct(note)
+                    ).runTest();
         }
     }
     
@@ -73,24 +71,26 @@ public class Bsp02Test
                 int negativ = (int) Arrays.stream(noten).filter(n -> n == 5).count();
                 int ungueltig = noten.length - positiv - negativ;
                 
-                AtomTest t = new AtomTest(() -> Bsp02.main(new String[] {}),
-                        Atom.builder()
-                                .add(punkte)
-                                .add(teilnehmer)
-                                .add(noten.length, i -> noten[i])
-                                .build(),
-                        Compound.builder()
-                                .add("? Erreichte Punkte [0-120]: ")
-                                .add(note)
-                                .add("? Anzahl der Teilnehmer: ")
-                                .add("? Note [1-5]: ").repeat(noten.length)
-                                .add(positiv + "/" + teilnehmer, " Teilnehmer haben bestanden.")
-                                .add(negativ + "/" + teilnehmer, " Teilnehmer haben nicht bestanden.")
-                                .add(ungueltig + "/" + teilnehmer, " Teilnehmer haben eine ungültige Beurteilung.")
-                                .build()
-                );
-                
-                Engine.ENGINE.checkTest(t);
+                TestMaker.callMain("einfprog.Bsp02")
+                        .withConsoleInput(
+                                Atom.builder()
+                                        .add(punkte)
+                                        .add(teilnehmer)
+                                        .add(noten.length, i -> noten[i])
+                                        .build()
+                        )
+                        .withConsoleOutput(
+                                Compound.builder()
+                                        .add("? Erreichte Punkte [0-120]: ")
+                                        .add(note)
+                                        .add("? Anzahl der Teilnehmer: ")
+                                        .add("? Note [1-5]: ").repeat(noten.length)
+                                        .add(positiv + "/" + teilnehmer, " Teilnehmer haben bestanden.")
+                                        .add(negativ + "/" + teilnehmer, " Teilnehmer haben nicht bestanden.")
+                                        .add(ungueltig + "/" + teilnehmer, " Teilnehmer haben eine ungültige Beurteilung.")
+                                        .build()
+                        )
+                        .runTest();
             }
         }
     }

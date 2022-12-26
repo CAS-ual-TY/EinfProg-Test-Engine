@@ -1,6 +1,10 @@
 package einfprog;
 
-import einfprog.test_engine.*;
+import einfprog.test_engine.output.Atom;
+import einfprog.test_engine.output.Compound;
+import einfprog.test_engine.Settings;
+import einfprog.test_engine.Util;
+import einfprog.test_engine.TestMaker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
@@ -70,25 +74,26 @@ public class Bsp01TestFail
             double verhaeltnis = stromkostenPro100km / kostenPro100km;
             
             final int finalError = error;
-            AtomTest t = new AtomTest(() -> testRun(finalError),
-                    new Atom[] {
-                            Atom.doubleAtom(verbrauchPro100km),
-                            Atom.doubleAtom(dieselpreisPro1L),
-                            Atom.doubleAtom(stromverbrauchPro100km),
-                            Atom.doubleAtom(strompreisPro1kWh)
-                    },
-                    Compound.start("? Verbrauch 100km[l]: "),
-                    Compound.start("? Dieselpreis pro Liter[Euro]: "),
-                    Compound.start("Kosten pro 100km[Euro] = ").doubleAtom(kostenPro100km),
-                    Compound.start("? Verbrauch 100km[kWh]: "),
-                    Compound.start("? Strompreis pro kWh[Euro]: "),
-                    Compound.start("Kosten pro 100km[Euro] = ").doubleAtom(stromkostenPro100km),
-                    Compound.start("Verhältnis S/D = ").doubleAtom(verhaeltnis)
-            );
             
             try
             {
-                Engine.ENGINE.checkTest(t);
+                TestMaker.builder()
+                        .run(() -> testRun(finalError))
+                        .withConsoleInput(
+                                Atom.doubleAtom(verbrauchPro100km),
+                                Atom.doubleAtom(dieselpreisPro1L),
+                                Atom.doubleAtom(stromverbrauchPro100km),
+                                Atom.doubleAtom(strompreisPro1kWh)
+                        )
+                        .withConsoleOutput(
+                                Compound.start("? Verbrauch 100km[l]: "),
+                                Compound.start("? Dieselpreis pro Liter[Euro]: "),
+                                Compound.start("Kosten pro 100km[Euro] = ").doubleAtom(kostenPro100km),
+                                Compound.start("? Verbrauch 100km[kWh]: "),
+                                Compound.start("? Strompreis pro kWh[Euro]: "),
+                                Compound.start("Kosten pro 100km[Euro] = ").doubleAtom(stromkostenPro100km),
+                                Compound.start("Verhältnis S/D = ").doubleAtom(verhaeltnis)
+                        ).runTest();
                 
                 if(error > 0)
                 {

@@ -1,4 +1,7 @@
-package einfprog.test_engine;
+package einfprog.test_engine.output;
+
+import einfprog.test_engine.Settings;
+import einfprog.test_engine.Util;
 
 import java.util.Arrays;
 import java.util.LinkedList;

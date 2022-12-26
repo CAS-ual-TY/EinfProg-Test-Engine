@@ -1,9 +1,11 @@
 package einfprog;
 
-import einfprog.test_engine.*;
+import einfprog.test_engine.params.ParamSet1;
+import einfprog.test_engine.params.ParamSet2;
+import einfprog.test_engine.Engine;
+import einfprog.test_engine.TestMaker;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.Random;
 
 public class Bsp06Test
@@ -160,15 +162,12 @@ public class Bsp06Test
         
         for(double[] input : simpleInputs)
         {
-            // dont test super special strings here
-            MethodInvokeTest<String, Bsp06> t = new MethodInvokeTest<>(
-                    Bsp06.class,
-                    "toString",
-                    toString(input),
-                    Util.objArr(input)
-            );
-            
-            Engine.ENGINE.checkTest(t);
+            TestMaker.builder()
+                    .withClass("einfprog.Bsp06")
+                    .statically()
+                    .callMethod("toString", String.class, new ParamSet1<>(input))
+                    .testValue(toString(input))
+                    .runTest();
         }
         
         double[][] moreInputs = new double[6][];
@@ -189,64 +188,55 @@ public class Bsp06Test
         
         for(double[] input : moreInputs)
         {
-            MethodInvokeTest<Double, Bsp06> t = new MethodInvokeTest<>(
-                    Bsp06.class,
-                    "getMin",
-                    getMin(input),
-                    Util.objArr(input)
-            );
             
-            Engine.ENGINE.checkTest(t);
+            TestMaker.builder()
+                    .withClass("einfprog.Bsp06")
+                    .statically()
+                    .callMethod("getMin", double.class, new ParamSet1<>(input))
+                    .testValue(getMin(input))
+                    .runTest();
         }
         
         for(double[] input : moreInputs)
         {
-            MethodInvokeTest<Double, Bsp06> t = new MethodInvokeTest<>(
-                    Bsp06.class,
-                    "getMax",
-                    getMax(input),
-                    Util.objArr(input)
-            );
-            
-            Engine.ENGINE.checkTest(t);
+            TestMaker.builder()
+                    .withClass("einfprog.Bsp06")
+                    .statically()
+                    .callMethod("getMax", double.class, new ParamSet1<>(input))
+                    .testValue(getMax(input))
+                    .runTest();
         }
         
         for(double[] input : moreInputs)
         {
-            MethodInvokeTest<Double, Bsp06> t = new MethodInvokeTest<>(
-                    Bsp06.class,
-                    "getMean",
-                    getMean(input),
-                    Util.objArr(input)
-            );
-            
-            Engine.ENGINE.checkTest(t);
+            TestMaker.builder()
+                    .withClass("einfprog.Bsp06")
+                    .statically()
+                    .callMethod("getMean", double.class, new ParamSet1<>(input))
+                    .testValue(getMean(input))
+                    .runTest();
         }
         
         for(double[] input : moreInputs)
         {
-            MethodInvokeTest<Double, Bsp06> t = new MethodInvokeTest<>(
-                    Bsp06.class,
-                    "getStandardDeviation",
-                    getStandardDeviation(input),
-                    Util.objArr(input)
-            );
-            
-            Engine.ENGINE.checkTest(t);
+            TestMaker.builder()
+                    .withClass("einfprog.Bsp06")
+                    .statically()
+                    .callMethod("getStandardDeviation", double.class, new ParamSet1<>(input))
+                    .testValue(getStandardDeviation(input))
+                    .runTest();
         }
         
         for(double[] input1 : moreInputs)
         {
             for(double[] input2 : moreInputs)
             {
-                MethodInvokeTest<Double, Bsp06> t = new MethodInvokeTest<>(
-                        Bsp06.class,
-                        "getRMSE",
-                        getRMSE(input1, input2),
-                        Util.objArr(input1, input2)
-                );
-                
-                Engine.ENGINE.checkTest(t);
+                TestMaker.builder()
+                        .withClass("einfprog.Bsp06")
+                        .statically()
+                        .callMethod("getRMSE", double.class, new ParamSet2<>(input1, input2))
+                        .testValue(getRMSE(input1, input2))
+                        .runTest();
             }
         }
     }
@@ -274,58 +264,34 @@ public class Bsp06Test
         
         for(double[] input : moreInputs)
         {
-            MethodTest<int[], Bsp06> t0 = new MethodTest<>(
-                    Bsp06.class,
-                    "getLocalMinima",
-                    int[].class,
-                    input.getClass()
-            );
-            
-            MethodInvokeTest<int[], Bsp06> t = new MethodInvokeTest<>(
-                    t0,
-                    getLocalMinima(input),
-                    Util.objArr(input)
-            );
-            
-            Engine.ENGINE.checkTest(t);
+            TestMaker.builder()
+                    .withClass("einfprog.Bsp06")
+                    .statically()
+                    .callMethod("getLocalMinima", int[].class, new ParamSet1<>(input))
+                    .testValue(getLocalMinima(input))
+                    .runTest();
         }
         
         for(double[] input : moreInputs)
         {
-            MethodTest<int[], Bsp06> t0 = new MethodTest<>(
-                    Bsp06.class,
-                    "getLocalMaxima",
-                    int[].class,
-                    input.getClass()
-            );
-            
-            MethodInvokeTest<int[], Bsp06> t = new MethodInvokeTest<>(
-                    t0,
-                    getLocalMaxima(input),
-                    Util.objArr(input)
-            );
-            
-            Engine.ENGINE.checkTest(t);
+            TestMaker.builder()
+                    .withClass("einfprog.Bsp06")
+                    .statically()
+                    .callMethod("getLocalMaxima", int[].class, new ParamSet1<>(input))
+                    .testValue(getLocalMaxima(input))
+                    .runTest();
         }
         
         for(double[] input : moreInputs)
         {
             for(int window = 1; window < input.length + 3; window += 3)
             {
-                MethodTest<double[], Bsp06> t0 = new MethodTest<>(
-                        Bsp06.class,
-                        "getMovingAverage",
-                        double[].class,
-                        input.getClass(), int.class
-                );
-                
-                MethodInvokeTest<double[], Bsp06> t = new MethodInvokeTest<>(
-                        t0,
-                        getMovingAverage(input, window),
-                        Util.objArr(input, window)
-                );
-                
-                Engine.ENGINE.checkTest(t);
+                TestMaker.builder()
+                        .withClass("einfprog.Bsp06")
+                        .statically()
+                        .callMethod("getMovingAverage", double[].class, new ParamSet2<>(input, window))
+                        .testValue(getMovingAverage(input, window))
+                        .runTest();
             }
         }
     }

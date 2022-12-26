@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
 
 public class SystemTests
@@ -68,6 +67,7 @@ public class SystemTests
         Assertions.assertEquals("test\ntest", Util.removeFakeSpace("test\ntest"));
     }
     
+    /*
     @Test
     public void testArrays()
     {
@@ -135,6 +135,7 @@ public class SystemTests
                 )
         );
     }
+    */
     
     private void shouldFail(Runnable r)
     {
