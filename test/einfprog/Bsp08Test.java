@@ -19,43 +19,43 @@ public class Bsp08Test
         for(TestItem item : items)
         {
             TestMaker.builder()
-                    .withClass("einfprog.Item")
-                    .withInstance(new ParamSet2<>(item.getDescription(), item.getOwner()))
+                    .findClass("einfprog.Item")
+                    .makeInstance(new ParamSet2<>(item.getDescription(), item.getOwner()))
                     .callMethod("toString", String.class, new ParamSet0())
                     .testValue(item.toString())
                     .runTest();
     
             TestMaker.builder()
-                    .withClass("einfprog.Item")
-                    .withInstance(new ParamSet2<>(item.getDescription(), item.getOwner()))
+                    .findClass("einfprog.Item")
+                    .makeInstance(new ParamSet2<>(item.getDescription(), item.getOwner()))
                     .testField("description", Modifier.PRIVATE, String.class)
                     .testValue(item.getDescription())
                     .runTest();
     
             TestMaker.builder()
-                    .withClass("einfprog.Item")
-                    .withInstance(new ParamSet2<>(item.getDescription(), item.getOwner()))
+                    .findClass("einfprog.Item")
+                    .makeInstance(new ParamSet2<>(item.getDescription(), item.getOwner()))
                     .testField("owner", Modifier.PRIVATE, String.class)
                     .testValue(item.getOwner())
                     .runTest();
     
             TestMaker.builder()
-                    .withClass("einfprog.Item")
-                    .withInstance(new ParamSet2<>(item.getDescription(), item.getOwner()))
+                    .findClass("einfprog.Item")
+                    .makeInstance(new ParamSet2<>(item.getDescription(), item.getOwner()))
                     .callMethod("getDescription", String.class, new ParamSet0())
                     .testValue(item.getDescription())
                     .runTest();
     
             TestMaker.builder()
-                    .withClass("einfprog.Item")
-                    .withInstance(new ParamSet2<>(item.getDescription(), item.getOwner()))
+                    .findClass("einfprog.Item")
+                    .makeInstance(new ParamSet2<>(item.getDescription(), item.getOwner()))
                     .callMethod("getOwner", String.class, new ParamSet0())
                     .testValue(item.getOwner())
                     .runTest();
     
             TestMaker.builder()
-                    .withClass("einfprog.Item")
-                    .withInstance(new ParamSet2<>("dummy", "dummy"))
+                    .findClass("einfprog.Item")
+                    .makeInstance(new ParamSet2<>("dummy", "dummy"))
                     .callMethod("setDescription", void.class, new ParamSet1<>(item.getDescription()))
                     .runTest()
                     .callMethod("getDescription", String.class, new ParamSet0())
@@ -63,8 +63,8 @@ public class Bsp08Test
                     .runTest();
     
             TestMaker.builder()
-                    .withClass("einfprog.Item")
-                    .withInstance(new ParamSet2<>("dummy", "dummy"))
+                    .findClass("einfprog.Item")
+                    .makeInstance(new ParamSet2<>("dummy", "dummy"))
                     .callMethod("setOwner", void.class, new ParamSet1<>(item.getOwner()))
                     .runTest()
                     .callMethod("getOwner", String.class, new ParamSet0())
@@ -113,14 +113,14 @@ public class Bsp08Test
     
     private static class ItemList {
         
-        private einfprog.Item[] items;
+        private Item[] items;
         private int size;
         
         public ItemList(int capacity) {
-            items = new einfprog.Item[capacity];
+            items = new Item[capacity];
         }
         
-        public int add(einfprog.Item item) {
+        public int add(Item item) {
             if (item != null && !isFull()) {
                 for (int i = 0; i < items.length; i++) {
                     if (items[i] == null) {
@@ -134,7 +134,7 @@ public class Bsp08Test
         }
         
         public int add(String description, String owner) {
-            return add(new einfprog.Item(description, owner));
+            return add(new Item(description, owner));
         }
         
         private boolean isValidIdx(int idx) {
@@ -153,7 +153,7 @@ public class Bsp08Test
         public String toString() {
             String s = "";
             for (int i = 0; i < items.length; i++) {
-                einfprog.Item n = items[i];
+                Item n = items[i];
                 s += (n == null) ? "<empty>" : n.getDescription() + " (" + n.getOwner() + ")";
                 if (i < items.length - 1)
                     s += ", ";
@@ -183,11 +183,11 @@ public class Bsp08Test
             }
         }
         
-        public einfprog.Item set(einfprog.Item item, int idx) {
+        public Item set(Item item, int idx) {
             if (!isValidIdx(idx))
                 return null;
             
-            einfprog.Item oldMaybeNull = items[idx];
+            Item oldMaybeNull = items[idx];
             if (item == null) //remove (may decrease size)
                 remove(idx);
             else { //replace (may increase size)
@@ -198,24 +198,24 @@ public class Bsp08Test
             return oldMaybeNull;
         }
         
-        public einfprog.Item get(int idx) {
+        public Item get(int idx) {
             if (!isValidIdx(idx))
                 return null;
             
             return items[idx];
         }
         
-        public int getFirstIndex(einfprog.Item item) {
+        public int getFirstIndex(Item item) {
             for (int i = 0; i < items.length; i++)
                 if (item == items[i])
                     return i;
             return -1;
         }
         
-        public einfprog.Item[] getItems() { //may return an array of size 0
-            einfprog.Item[] retVal = new einfprog.Item[size];
+        public Item[] getItems() { //may return an array of size 0
+            Item[] retVal = new Item[size];
             int idx = 0;
-            for (einfprog.Item n : items) {
+            for (Item n : items) {
                 if (n != null)
                     retVal[idx++] = n;
             }
@@ -235,15 +235,15 @@ public class Bsp08Test
         
         //Task 2
         public void enlarge() {
-            einfprog.Item[] newItems = new einfprog.Item[items.length * 2];
+            Item[] newItems = new Item[items.length * 2];
             for (int i = 0; i < items.length; i++)
                 newItems[i] = items[i];
             items = newItems;
         }
         
         /* **** NOT part of the assignment (discuss in class: == vs. equals) */
-        public boolean contains(einfprog.Item item) {
-            for (einfprog.Item n : items) {
+        public boolean contains(Item item) {
+            for (Item n : items) {
                 if (n != null && n.equals(item)) {
                     return true;
                 }
@@ -252,9 +252,8 @@ public class Bsp08Test
         }
     }
     
-    private static class ExtendedItemList extends einfprog.ItemList
+    private static class ExtendedItemList extends ItemList
     {
-    
         private final String title;
     
         public ExtendedItemList(String title, int capacity) {
@@ -268,7 +267,7 @@ public class Bsp08Test
         }
     
         @Override
-        public int add(einfprog.Item item) {
+        public int add(Item item) {
             int idx = super.add(item);
             if (idx != -1 && isFull())
                 enlarge();
@@ -282,7 +281,7 @@ public class Bsp08Test
             int capacity = getCapacity();
             int writeIdx = 0;
             for (int readIdx = 0; readIdx < capacity; readIdx++) {
-                einfprog.Item curItem = get(readIdx);
+                Item curItem = get(readIdx);
                 if (curItem != null) {
                     set(curItem, writeIdx++);
                 }

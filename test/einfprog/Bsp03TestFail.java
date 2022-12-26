@@ -232,19 +232,19 @@ public class Bsp03TestFail
             try
             {
                 TestMaker.builder()
-                        .run(() -> testRun(finalError))
-                        .withConsoleInput(Atom.construct(maxPaare, maxMaexchen, wuerfe))
-                        .withConsoleOutput(output.build())
+                        .runnable(() -> testRun(finalError))
+                        .setConsoleInput(Atom.construct(maxPaare, maxMaexchen, wuerfe))
+                        .expectConsoleOutput(output.build())
                         .runTest();
                 
                 TestMaker.builder()
                         .withClass(getClass())
-                        .withDirectInstance(error == 3 || error == 4 ? null : this)
-                        .checkMethod("rollDieTest", (error == 3 || error == 4 ? Modifier.STATIC : 0) + (error == 2 || error == 4 ? Modifier.PUBLIC : Modifier.PRIVATE), int.class, new ParamTypeSet1(int.class))
+                        .withInstance(error == 3 || error == 4 ? null : this)
+                        .checkMethodSignature("rollDieTest", (error == 3 || error == 4 ? Modifier.STATIC : 0) + (error == 2 || error == 4 ? Modifier.PUBLIC : Modifier.PRIVATE), int.class, new ParamTypeSet1(int.class))
                         .runTest();
                 
                 TestMaker.builder()
-                        .withClass("einfprog.Bsp03")
+                        .findClass("einfprog.Bsp03")
                         .statically()
                         .callMethod("isMaexchen", boolean.class, new ParamSet2<>(w1, w2))
                         .testValue(error != 5)

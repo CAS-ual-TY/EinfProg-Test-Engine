@@ -163,7 +163,7 @@ public class Bsp06Test
         for(double[] input : simpleInputs)
         {
             TestMaker.builder()
-                    .withClass("einfprog.Bsp06")
+                    .findClass("einfprog.Bsp06")
                     .statically()
                     .callMethod("toString", String.class, new ParamSet1<>(input))
                     .testValue(toString(input))
@@ -190,7 +190,7 @@ public class Bsp06Test
         {
             
             TestMaker.builder()
-                    .withClass("einfprog.Bsp06")
+                    .findClass("einfprog.Bsp06")
                     .statically()
                     .callMethod("getMin", double.class, new ParamSet1<>(input))
                     .testValue(getMin(input))
@@ -200,7 +200,7 @@ public class Bsp06Test
         for(double[] input : moreInputs)
         {
             TestMaker.builder()
-                    .withClass("einfprog.Bsp06")
+                    .findClass("einfprog.Bsp06")
                     .statically()
                     .callMethod("getMax", double.class, new ParamSet1<>(input))
                     .testValue(getMax(input))
@@ -210,7 +210,7 @@ public class Bsp06Test
         for(double[] input : moreInputs)
         {
             TestMaker.builder()
-                    .withClass("einfprog.Bsp06")
+                    .findClass("einfprog.Bsp06")
                     .statically()
                     .callMethod("getMean", double.class, new ParamSet1<>(input))
                     .testValue(getMean(input))
@@ -220,7 +220,7 @@ public class Bsp06Test
         for(double[] input : moreInputs)
         {
             TestMaker.builder()
-                    .withClass("einfprog.Bsp06")
+                    .findClass("einfprog.Bsp06")
                     .statically()
                     .callMethod("getStandardDeviation", double.class, new ParamSet1<>(input))
                     .testValue(getStandardDeviation(input))
@@ -232,7 +232,7 @@ public class Bsp06Test
             for(double[] input2 : moreInputs)
             {
                 TestMaker.builder()
-                        .withClass("einfprog.Bsp06")
+                        .findClass("einfprog.Bsp06")
                         .statically()
                         .callMethod("getRMSE", double.class, new ParamSet2<>(input1, input2))
                         .testValue(getRMSE(input1, input2))
@@ -265,7 +265,7 @@ public class Bsp06Test
         for(double[] input : moreInputs)
         {
             TestMaker.builder()
-                    .withClass("einfprog.Bsp06")
+                    .findClass("einfprog.Bsp06")
                     .statically()
                     .callMethod("getLocalMinima", int[].class, new ParamSet1<>(input))
                     .testValue(getLocalMinima(input))
@@ -275,7 +275,7 @@ public class Bsp06Test
         for(double[] input : moreInputs)
         {
             TestMaker.builder()
-                    .withClass("einfprog.Bsp06")
+                    .findClass("einfprog.Bsp06")
                     .statically()
                     .callMethod("getLocalMaxima", int[].class, new ParamSet1<>(input))
                     .testValue(getLocalMaxima(input))
@@ -287,7 +287,7 @@ public class Bsp06Test
             for(int window = 1; window < input.length + 3; window += 3)
             {
                 TestMaker.builder()
-                        .withClass("einfprog.Bsp06")
+                        .findClass("einfprog.Bsp06")
                         .statically()
                         .callMethod("getMovingAverage", double[].class, new ParamSet2<>(input, window))
                         .testValue(getMovingAverage(input, window))

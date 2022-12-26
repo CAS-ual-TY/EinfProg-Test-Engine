@@ -78,14 +78,14 @@ public class Bsp01TestFail
             try
             {
                 TestMaker.builder()
-                        .run(() -> testRun(finalError))
-                        .withConsoleInput(
+                        .runnable(() -> testRun(finalError))
+                        .setConsoleInput(
                                 Atom.doubleAtom(verbrauchPro100km),
                                 Atom.doubleAtom(dieselpreisPro1L),
                                 Atom.doubleAtom(stromverbrauchPro100km),
                                 Atom.doubleAtom(strompreisPro1kWh)
                         )
-                        .withConsoleOutput(
+                        .expectConsoleOutput(
                                 Compound.start("? Verbrauch 100km[l]: "),
                                 Compound.start("? Dieselpreis pro Liter[Euro]: "),
                                 Compound.start("Kosten pro 100km[Euro] = ").doubleAtom(kostenPro100km),

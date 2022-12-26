@@ -39,8 +39,8 @@ public class Bsp02Test
             String note = note(punkte);
             
             TestMaker.callMain("einfprog.Bsp02")
-                    .withConsoleInput(Atom.construct(punkte))
-                    .withConsoleOutput(
+                    .setConsoleInput(Atom.construct(punkte))
+                    .expectConsoleOutput(
                             Compound.construct("? Erreichte Punkte [0-120]: "),
                             Compound.construct(note)
                     ).runTest();
@@ -72,14 +72,14 @@ public class Bsp02Test
                 int ungueltig = noten.length - positiv - negativ;
                 
                 TestMaker.callMain("einfprog.Bsp02")
-                        .withConsoleInput(
+                        .setConsoleInput(
                                 Atom.builder()
                                         .add(punkte)
                                         .add(teilnehmer)
                                         .add(noten.length, i -> noten[i])
                                         .build()
                         )
-                        .withConsoleOutput(
+                        .expectConsoleOutput(
                                 Compound.builder()
                                         .add("? Erreichte Punkte [0-120]: ")
                                         .add(note)

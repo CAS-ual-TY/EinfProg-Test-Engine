@@ -156,7 +156,7 @@ public class Bsp04Test
             {
                 
                 TestMaker.builder()
-                        .withClass("einfprog.Bsp04")
+                        .findClass("einfprog.Bsp04")
                         .statically()
                         .callMethod("isPalindrome", boolean.class, new ParamSet1<>(s))
                         .testValue(isPalindrome(s))
@@ -171,7 +171,7 @@ public class Bsp04Test
             for(String s : ss)
             {
                 TestMaker.builder()
-                        .withClass("einfprog.Bsp04")
+                        .findClass("einfprog.Bsp04")
                         .statically()
                         .callMethod("wordScore", int.class, new ParamSet1<>(s))
                         .testValue(wordScore(s))
@@ -188,12 +188,12 @@ public class Bsp04Test
         int ret = chainWords(score, output, inputList);
         
         TestMaker.builder()
-                .withClass("einfprog.Bsp04")
+                .findClass("einfprog.Bsp04")
                 .statically()
                 .callMethod("chainWords", int.class, new ParamSet1<>(score))
                 .testValue(ret)
-                .withConsoleInput(Atom.construct((Object[]) input))
-                .withConsoleOutput(output.build())
+                .setConsoleInput(Atom.construct((Object[]) input))
+                .expectConsoleOutput(output.build())
                 .runTest();
     }
     

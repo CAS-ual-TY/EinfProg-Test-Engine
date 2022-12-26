@@ -112,8 +112,8 @@ public class Bsp03Test
             PRNG.randomize(seed);
             
             TestMaker.callMain("einfprog.Bsp03")
-                    .withConsoleInput(Atom.construct(maxPaare, maxMaexchen))
-                    .withConsoleOutput(output.build())
+                    .setConsoleInput(Atom.construct(maxPaare, maxMaexchen))
+                    .expectConsoleOutput(output.build())
                     .runTest();
         }
         
@@ -131,7 +131,7 @@ public class Bsp03Test
             PRNG.randomize(seed);
             
             TestMaker.builder()
-                    .withClass("einfprog.Bsp03")
+                    .findClass("einfprog.Bsp03")
                     .statically()
                     .callMethod("rollDie", int.class, new ParamSet0())
                     .testValue(result)
@@ -145,14 +145,14 @@ public class Bsp03Test
             {
                 
                 TestMaker.builder()
-                        .withClass("einfprog.Bsp03")
+                        .findClass("einfprog.Bsp03")
                         .statically()
                         .callMethod("isMaexchen", boolean.class, new ParamSet2<>(w1, w2))
                         .testValue(groessererWert(w1, w2) == 21)
                         .runTest();
     
                 TestMaker.builder()
-                        .withClass("einfprog.Bsp03")
+                        .findClass("einfprog.Bsp03")
                         .statically()
                         .callMethod("isPair", boolean.class, new ParamSet2<>(w1, w2))
                         .testValue(w1 == w2)
@@ -183,10 +183,10 @@ public class Bsp03Test
             PRNG.randomize(seed);
             
             TestMaker.builder()
-                    .withClass("einfprog.Bsp03")
+                    .findClass("einfprog.Bsp03")
                     .statically()
                     .callMethod("maexchen", void.class, new ParamSet1<>(wuerfe))
-                    .withConsoleOutput(output.build())
+                    .expectConsoleOutput(output.build())
                     .runTest();
         }
         
@@ -214,8 +214,8 @@ public class Bsp03Test
             PRNG.randomize(seed);
             
             TestMaker.callMain("einfprog.Bsp03")
-                    .withConsoleInput(Atom.construct(maxPaare, maxMaexchen, wuerfe))
-                    .withConsoleOutput(output.build())
+                    .setConsoleInput(Atom.construct(maxPaare, maxMaexchen, wuerfe))
+                    .expectConsoleOutput(output.build())
                     .runTest();
         }
     }

@@ -22,11 +22,11 @@ public class Bsp01Test
                 double kostenPro100km = verbrauchPro100km * dieselpreisPro1L;
                 
                 TestMaker.builder()
-                        .run(() -> Bsp01S.main(new String[] {}))
-                        .withConsoleInput(
+                        .runnable(() -> Bsp01S.main(new String[] {}))
+                        .setConsoleInput(
                                 Atom.doubleAtom(verbrauchPro100km),
                                 Atom.doubleAtom(dieselpreisPro1L))
-                        .withConsoleOutput(
+                        .expectConsoleOutput(
                                 Compound.start("? Verbrauch 100km[l]: "),
                                 Compound.start("? Dieselpreis pro Liter[Euro]: "),
                                 Compound.start("Kosten pro 100km[Euro] = ").doubleAtom(kostenPro100km))
@@ -58,14 +58,14 @@ public class Bsp01Test
                         double verhaeltnis = stromkostenPro100km / kostenPro100km;
                         
                         TestMaker.builder()
-                                .run(() -> Bsp01S.main(new String[] {}))
-                                .withConsoleInput(
+                                .runnable(() -> Bsp01S.main(new String[] {}))
+                                .setConsoleInput(
                                         Atom.doubleAtom(verbrauchPro100km),
                                         Atom.doubleAtom(dieselpreisPro1L),
                                         Atom.doubleAtom(stromverbrauchPro100km),
                                         Atom.doubleAtom(strompreisPro1kWh)
                                 )
-                                .withConsoleOutput(
+                                .expectConsoleOutput(
                                         Compound.start("? Verbrauch 100km[l]: "),
                                         Compound.start("? Dieselpreis pro Liter[Euro]: "),
                                         Compound.start("Kosten pro 100km[Euro] = ").doubleAtom(kostenPro100km),

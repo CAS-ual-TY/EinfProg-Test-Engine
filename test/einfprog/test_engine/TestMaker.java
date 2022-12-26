@@ -9,6 +9,7 @@ import einfprog.test_engine.params.ParamSet1;
 import einfprog.test_engine.tests.*;
 
 import java.lang.reflect.Modifier;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class TestMaker<C, T, PC extends IParamTypeSet, PM extends IParamTypeSet>
@@ -37,7 +38,7 @@ public class TestMaker<C, T, PC extends IParamTypeSet, PM extends IParamTypeSet>
         stackedFeedback = new StringBuilder();
     }
     
-    public TestMaker<C, T, PC, PM> withClass(String className)
+    public TestMaker<C, T, PC, PM> findClass(String className)
     {
         classGetter = new ClassTest<>(className);
         lastTest = classGetter;
@@ -50,7 +51,7 @@ public class TestMaker<C, T, PC extends IParamTypeSet, PM extends IParamTypeSet>
         return this;
     }
     
-    public TestMaker<C, T, PC, PM> withInstance(IParamSet<? extends PC> constructorParams)
+    public TestMaker<C, T, PC, PM> makeInstance(IParamSet<? extends PC> constructorParams)
     {
         assert classGetter != null;
         instanceGetter = new ConstructorInvokeTest<C, PC>(classGetter, Modifier.PUBLIC, constructorParams);
@@ -58,7 +59,7 @@ public class TestMaker<C, T, PC extends IParamTypeSet, PM extends IParamTypeSet>
         return this;
     }
     
-    public TestMaker<C, T, PC, PM> withDirectInstance(C instance)
+    public TestMaker<C, T, PC, PM> withInstance(C instance)
     {
         instanceGetter = new InstanceGetter<>(instance);
         return this;
@@ -71,7 +72,7 @@ public class TestMaker<C, T, PC extends IParamTypeSet, PM extends IParamTypeSet>
         return this;
     }
     
-    public TestMaker<C, T, PC, PM> checkMethod(String methodName, int modifiers, Class<? extends T> returnValueType, PM methodTypeParams)
+    public TestMaker<C, T, PC, PM> checkMethodSignature(String methodName, int modifiers, Class<? extends T> returnValueType, PM methodTypeParams)
     {
         assert classGetter != null;
         lastTest = new MethodTest<>(classGetter, methodName, modifiers, returnValueType, methodTypeParams);
@@ -91,7 +92,7 @@ public class TestMaker<C, T, PC extends IParamTypeSet, PM extends IParamTypeSet>
         return callMethod(methodName, returnValueType, Modifier.PUBLIC | (instanceGetter instanceof StaticInstance ? Modifier.STATIC : 0), methodParams);
     }
     
-    public TestMaker<C, T, PC, PM> checkField(String fieldName, int modifiers, Class<? extends T> fieldType)
+    public TestMaker<C, T, PC, PM> checkFieldSignature(String fieldName, int modifiers, Class<? extends T> fieldType)
     {
         assert classGetter != null;
         lastTest = new FieldTest<>(classGetter, fieldName, modifiers, fieldType);
@@ -133,25 +134,25 @@ public class TestMaker<C, T, PC extends IParamTypeSet, PM extends IParamTypeSet>
         return this;
     }
     
-    public TestMaker<C, T, PC, PM> run(Runnable r, String onError)
+    public TestMaker<C, T, PC, PM> runnable(Runnable r, String onError)
     {
         lastTest = new RunnableTest(r, onError);
         return this;
     }
     
-    public TestMaker<C, T, PC, PM> run(Runnable r)
+    public TestMaker<C, T, PC, PM> runnable(Runnable r)
     {
         lastTest = new RunnableTest(r);
         return this;
     }
     
-    public TestMaker<C, T, PC, PM> withConsoleInput(Atom... input)
+    public TestMaker<C, T, PC, PM> setConsoleInput(Atom... input)
     {
         this.input = input;
         return this;
     }
     
-    public TestMaker<C, T, PC, PM> withConsoleOutput(Compound... output)
+    public TestMaker<C, T, PC, PM> expectConsoleOutput(Compound... output)
     {
         this.output = output;
         return this;
@@ -172,6 +173,18 @@ public class TestMaker<C, T, PC extends IParamTypeSet, PM extends IParamTypeSet>
         return this;
     }
     
+    public C getInstance()
+    {
+        assert instanceGetter != null;
+        return instanceGetter.getInstance();
+    }
+    
+    public TestMaker<C, T, PC, PM> forInstance(Consumer<C> consumer)
+    {
+        consumer.accept(getInstance());
+        return this;
+    }
+    
     public static <C, T, PC extends IParamTypeSet, PM extends IParamTypeSet> TestMaker<C, T, PC, PM> builder()
     {
         return new TestMaker<>();
@@ -179,6 +192,6 @@ public class TestMaker<C, T, PC extends IParamTypeSet, PM extends IParamTypeSet>
     
     public static TestMaker<?, ?, ?, ?> callMain(String clazz)
     {
-        return builder().withClass(clazz).statically().callMethod("main", void.class, new ParamSet1<String[]>(new String[0]));
+        return builder().findClass(clazz).statically().callMethod("main", void.class, new ParamSet1<String[]>(new String[0]));
     }
 }
