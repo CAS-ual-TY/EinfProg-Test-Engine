@@ -6,6 +6,7 @@ import einfprog.test_engine.Util;
 import einfprog.test_engine.params.ParamSet0;
 import einfprog.test_engine.params.ParamSet1;
 import einfprog.test_engine.params.ParamSet2;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Array;
@@ -117,6 +118,11 @@ public class Bsp08Test
                 Arrays.stream(moreItems).forEach(i ->
                 {
                     maker.hardInstanceFork()
+                            .callMethod("toString", String.class, new ParamSet0())
+                            .testValue(myList.toString())
+                            .runTest();
+                    
+                    maker.hardInstanceFork()
                             .callMethod("isEmpty", boolean.class, new ParamSet0())
                             .testValue(myList.isEmpty())
                             .runTest();
@@ -145,11 +151,6 @@ public class Bsp08Test
                             .testValue(myList.getSize())
                             .runTest();
                     
-                    maker.hardInstanceFork()
-                            .callMethod("toString", String.class, new ParamSet0())
-                            .testValue(myList.toString())
-                            .runTest();
-                    
                     myList.clear();
                     
                     maker.hardInstanceFork()
@@ -161,6 +162,11 @@ public class Bsp08Test
                             .testValue(myList.toString())
                             .runTest();
                 });
+                
+                maker.hardInstanceFork()
+                        .callMethod("toString", String.class, new ParamSet0())
+                        .testValue(myList.toString())
+                        .runTest();
             });
             
             TestItemList myList = new TestItemList(3);
@@ -290,6 +296,127 @@ public class Bsp08Test
     public void testErweiterung()
     {
         Engine.ENGINE.requiresDoesNotFail(this::testMain, "Part 1 must pass first.");
+        
+        Class<?> itemClass = TestMaker.builder()
+                .findClass("einfprog.Item")
+                .runTest()
+                .getTheClass();
+        
+        Class<?> itemListClass = TestMaker.builder()
+                .findClass("einfprog.ItemList")
+                .runTest()
+                .getTheClass();
+        
+        Class<?> extItemListClass = TestMaker.builder()
+                .findClass("einfprog.ExtendedItemList")
+                .runTest()
+                .getTheClass();
+        
+        Assertions.assertTrue(itemListClass.isAssignableFrom(extItemListClass), itemListClass.getCanonicalName() + " is a super class of " + extItemListClass.getCanonicalName());
+        
+        Class<?> itemArrayClass = itemClass.arrayType();
+        
+        TestMaker.builder()
+                .findClass("einfprog.ExtendedItemList")
+                .makeInstance(new ParamSet2<>("my first list", 6))
+                .callMethod("toString", String.class, new ParamSet0())
+                .testValue(new TestExtendedItemList("my first list", 6).toString())
+                .runTest();
+        
+        TestMaker.builder()
+                .findClass("einfprog.ItemList")
+                .makeInstance(new ParamSet1<>(6))
+                .callMethod("enlarge", void.class, new ParamSet0())
+                .runTest()
+                .callMethod("toString", String.class, new ParamSet0())
+                .testValue(new TestItemList(12).toString())
+                .runTest();
+        
+        TestMaker.builder()
+                .findClass("einfprog.ExtendedItemList")
+                .makeInstance(new ParamSet2<>("my list", 6))
+                .runTest()
+                .findClass("einfprog.ItemList")
+                .testField("items", Modifier.PRIVATE, itemArrayClass)
+                .testValue(arr -> Array.getLength(arr) == 6 && Arrays.stream((Object[]) arr).allMatch(Objects::isNull), Util::objectToString, Util.arraysToString(new Object[6]))
+                .runTest()
+                .hardInstanceFork()
+                .callMethod("enlarge", void.class, new ParamSet0())
+                .runTest()
+                .testField("items", Modifier.PRIVATE, itemArrayClass)
+                .testValue(arr -> Array.getLength(arr) == 6 * 2 && Arrays.stream((Object[]) arr).allMatch(Objects::isNull), Util::objectToString, Util.arraysToString(new Object[6 * 2]))
+                .runTest();
+        
+        TestItem[] allItems = new TestItem[] {
+                new TestItem("Item1", "Owner-A"),
+                new TestItem("AnotherItem", "Owner-B"),
+                new TestItem("ItemNo3", "SomeOwner"),
+                new TestItem("ItemFour", "FunnyOwner"),
+                new TestItem("ItemThe5th", "Owner-V"),
+                new TestItem("CursedItem6", "CursedOwner"),
+                new TestItem("MyItem7", "MyOwner"),
+                new TestItem("LastItem8", "FinalOwner"),
+                new TestItem("BestAndCoolestItemPossible", "Luis")
+        };
+        
+        TestMaker.newMaker(maker ->
+        {
+            TestExtendedItemList myList = new TestExtendedItemList("new list", 4);
+            
+            maker.findClass("einfprog.ExtendedItemList")
+                    .makeInstance(new ParamSet2<>("new list", 4))
+                    .runTest()
+                    .findClass("einfprog.ItemList")
+                    .runTest();
+            
+            Arrays.stream(allItems).forEach(i ->
+            {
+                maker.hardInstanceFork()
+                        .callMethod("add", int.class, new ParamSet2<>(i.getDescription(), i.getOwner()))
+                        .testValue(myList.add(i))
+                        .runTest()
+                        .callMethod("toString", String.class, new ParamSet0())
+                        .testValue(myList.toString())
+                        .runTest();
+            });
+            
+            maker.hardInstanceFork()
+                    .callMethod("toString", String.class, new ParamSet0())
+                    .testValue(myList.toString())
+                    .runTest();
+            
+            myList.remove(1);
+            maker.hardInstanceFork()
+                    .callMethod("remove", boolean.class, new ParamSet1<>(1))
+                    .runTest()
+                    .callMethod("toString", String.class, new ParamSet0())
+                    .testValue(myList.toString())
+                    .runTest();
+            
+            myList.remove(3);
+            maker.hardInstanceFork()
+                    .callMethod("remove", boolean.class, new ParamSet1<>(3))
+                    .runTest()
+                    .callMethod("toString", String.class, new ParamSet0())
+                    .testValue(myList.toString())
+                    .runTest();
+            
+            maker.findClass("einfprog.ExtendedItemList").hardInstanceFork()
+                    .callMethod("compact", boolean.class, new ParamSet0())
+                    .testValue(myList.compact())
+                    .runTest()
+                    .callMethod("toString", String.class, new ParamSet0())
+                    .testValue(myList.toString())
+                    .runTest();
+            
+            maker.findClass("einfprog.ExtendedItemList").hardInstanceFork()
+                    .callMethod("compact", boolean.class, new ParamSet0())
+                    .testValue(myList.compact())
+                    .runTest()
+                    .callMethod("toString", String.class, new ParamSet0())
+                    .testValue(myList.toString())
+                    .runTest();
+        });
     }
     
     private static class TestItem
