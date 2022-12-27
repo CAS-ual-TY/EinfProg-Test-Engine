@@ -126,7 +126,7 @@ public class MethodTest<T, C, P extends IParamTypeSet> extends TestBase implemen
         
         errorCallback.println("Found:");
         Util.weakSpacer(errorCallback);
-        errorCallback.println(Modifier.toString(methodModifiers) + " " + type.getSimpleName() + " " + methodName + " (" + Arrays.stream(params.getParamTypes()).map(Class::getSimpleName).collect(Collectors.joining(", ")) + ")");
+        errorCallback.println(Modifier.toString(methodModifiers) + " " + type.getSimpleName() + " " + methodName + "(" + Arrays.stream(params.getParamTypes()).map(Class::getSimpleName).collect(Collectors.joining(", ")) + ")");
         
         Util.strongSpacer(errorCallback);
     }

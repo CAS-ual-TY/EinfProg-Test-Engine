@@ -1,11 +1,11 @@
 package einfprog;
 
-import einfprog.test_engine.*;
+import einfprog.test_engine.TestMaker;
+import einfprog.test_engine.Util;
 import einfprog.test_engine.output.Atom;
 import einfprog.test_engine.output.Compound;
 import einfprog.test_engine.params.ParamSet2;
 import einfprog.test_engine.params.ParamTypeSet1;
-import einfprog.test_engine.TestMaker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;

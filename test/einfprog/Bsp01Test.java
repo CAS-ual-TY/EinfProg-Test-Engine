@@ -1,8 +1,8 @@
 package einfprog;
 
+import einfprog.test_engine.TestMaker;
 import einfprog.test_engine.output.Atom;
 import einfprog.test_engine.output.Compound;
-import einfprog.test_engine.TestMaker;
 import org.junit.jupiter.api.Test;
 
 public class Bsp01Test

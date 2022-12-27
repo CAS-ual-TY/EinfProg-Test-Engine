@@ -3,19 +3,32 @@ package einfprog.test_engine.base;
 import einfprog.test_engine.Util;
 
 import java.io.PrintWriter;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class ValueTester<T> extends TestBase implements IValueTester<T>
 {
     private IValueGetter<T> value;
     private Predicate<T> predicate;
+    private Function<T, String> toStringFunc;
     private String expected;
     
-    public ValueTester(IValueGetter<T> value, Predicate<T> predicate, String expected)
+    public ValueTester(IValueGetter<T> value, Predicate<T> predicate, Function<T, String> toStringFunc, String expected)
     {
         this.value = value;
         this.predicate = predicate;
+        this.toStringFunc = toStringFunc;
         this.expected = expected;
+    }
+    
+    public ValueTester(IValueGetter<T> value, Function<T, String> toStringFunc, T expectedValue)
+    {
+        this(value, v -> Util.objectsEquals(expectedValue, v), toStringFunc, toStringFunc.apply(expectedValue));
+    }
+    
+    public ValueTester(IValueGetter<T> value, T expectedValue)
+    {
+        this(value, Util::objectToString, expectedValue);
     }
     
     @Override
@@ -46,7 +59,7 @@ public class ValueTester<T> extends TestBase implements IValueTester<T>
         
         errorCallback.println("Found:");
         Util.weakSpacer(errorCallback);
-        errorCallback.println(value);
+        errorCallback.println(toStringFunc.apply(value));
         
         Util.strongSpacer(errorCallback);
         

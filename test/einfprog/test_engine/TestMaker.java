@@ -9,11 +9,35 @@ import einfprog.test_engine.params.ParamSet1;
 import einfprog.test_engine.tests.*;
 
 import java.lang.reflect.Modifier;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class TestMaker<C, T, PC extends IParamTypeSet, PM extends IParamTypeSet>
 {
+    public TestMaker<C, T, PC, PM> fork()
+    {
+        TestMaker<C, T, PC, PM> maker = new TestMaker<>();
+        maker.classGetter = classGetter;
+        maker.instanceGetter = instanceGetter;
+        maker.valueGetter = valueGetter;
+        maker.valueTester = valueTester;
+        maker.lastTest = lastTest;
+        maker.input = input;
+        maker.output = output;
+        maker.stackedFeedback.append(stackedFeedback.toString());
+        return maker;
+    }
+    
+    public TestMaker<C, T, PC, PM> hardInstanceFork()
+    {
+        TestMaker<C, T, PC, PM> maker = fork();
+        maker.instanceGetter = new InstanceGetter<>(maker.getInstance());
+        maker.stackedFeedback.delete(0, maker.stackedFeedback.length());
+        return maker;
+    }
+    
     private IClassGetter<C> classGetter;
     private IInstanceGetter<C> instanceGetter;
     private IValueGetter<T> valueGetter;
@@ -112,24 +136,32 @@ public class TestMaker<C, T, PC extends IParamTypeSet, PM extends IParamTypeSet>
         return testField(fieldName, Modifier.PUBLIC | (instanceGetter instanceof StaticInstance ? Modifier.STATIC : 0), returnType);
     }
     
-    public TestMaker<C, T, PC, PM> forValue(T value)
+    public TestMaker<C, T, PC, PM> setValue(T value)
     {
         valueGetter = new ValueGetter<>(value);
         return this;
     }
     
-    public TestMaker<C, T, PC, PM> testValue(Predicate<T> predicate, String expected)
+    public TestMaker<C, T, PC, PM> testValue(Predicate<T> predicate, Function<T, String> toStringFunc, String expected)
     {
         assert valueGetter != null;
-        valueTester = new ValueTester<>(valueGetter, predicate, expected);
+        valueTester = new ValueTester<>(valueGetter, predicate, toStringFunc, expected);
         lastTest = valueTester;
         return this;
     }
     
-    public TestMaker<C, T, PC, PM> testValue(T expected)
+    public TestMaker<C, T, PC, PM> testValue(Function<T, String> toStringFunc, T expectedValue)
     {
         assert valueGetter != null;
-        valueTester = new ValueTester<>(valueGetter, v -> Util.objectsEquals(expected, v), Util.objectToString(expected));
+        valueTester = new ValueTester<>(valueGetter, toStringFunc, expectedValue);
+        lastTest = valueTester;
+        return this;
+    }
+    
+    public TestMaker<C, T, PC, PM> testValue(T expectedValue)
+    {
+        assert valueGetter != null;
+        valueTester = new ValueTester<>(valueGetter, expectedValue);
         lastTest = valueTester;
         return this;
     }
@@ -187,9 +219,50 @@ public class TestMaker<C, T, PC extends IParamTypeSet, PM extends IParamTypeSet>
         return this;
     }
     
+    public T getValue()
+    {
+        assert valueGetter != null;
+        return valueGetter.getValue();
+    }
+    
+    public TestMaker<C, T, PC, PM> forValue(Consumer<T> consumer)
+    {
+        consumer.accept(getValue());
+        return this;
+    }
+    
+    public Class<? extends C> getTheClass()
+    {
+        assert classGetter != null;
+        return classGetter.findClass();
+    }
+    
+    public TestMaker<C, T, PC, PM> forClass(Consumer<Class<? extends C>> consumer)
+    {
+        consumer.accept(getTheClass());
+        return this;
+    }
+    
     public static <C, T, PC extends IParamTypeSet, PM extends IParamTypeSet> TestMaker<C, T, PC, PM> builder()
     {
         return new TestMaker<>();
+    }
+    
+    public static <C, T, PC extends IParamTypeSet, PM extends IParamTypeSet> void newMaker(Consumer<TestMaker<C, T, PC, PM>> consumer)
+    {
+        consumer.accept(builder());
+    }
+    
+    public TestMaker<C, T, PC, PM> forClassAndInstance(BiConsumer<Class<? extends C>, C> consumer)
+    {
+        consumer.accept(getTheClass(), getInstance());
+        return this;
+    }
+    
+    public TestMaker<C, T, PC, PM> forInstanceAndMaker(BiConsumer<TestMaker<C, T, PC, PM>, C> consumer)
+    {
+        consumer.accept(this, getInstance());
+        return this;
     }
     
     public static TestMaker<?, ?, ?, ?> callMain(String clazz)

@@ -9,12 +9,22 @@ public class ParamSet1<A> extends ParamTypeSet1 implements IParamSet<ParamTypeSe
     private Object[] params;
     private A par1;
     
-    public ParamSet1(Object[] params)
+    public ParamSet1(Class<?>[] paramTypes, Object[] params)
     {
-        super(Arrays.stream(params).map(par -> Util.unboxClass(par.getClass())).toArray(Class<?>[]::new));
+        super(paramTypes);
         assert params.length == 1;
         this.params = params;
         par1 = (A) params[0];
+    }
+    
+    public ParamSet1(Object[] params)
+    {
+        this(Arrays.stream(params).map(par -> Util.unboxClass(par.getClass())).toArray(Class<?>[]::new), params);
+    }
+    
+    public ParamSet1(Class<?> par1Class, A par1)
+    {
+        this(new Class<?>[] {par1Class}, new Object[] {par1});
     }
     
     public ParamSet1(A par1)

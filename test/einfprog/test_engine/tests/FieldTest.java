@@ -138,7 +138,7 @@ public class FieldTest<C, T> extends TestBase implements IFieldInvoker<C, T>
     {
         clazz.appendFeedback(errorCallback);
         
-        errorCallback.println("When accessing field:");
+        errorCallback.println("After accessing field:");
         Util.weakSpacer(errorCallback);
         errorCallback.println(fieldToString());
         Util.strongSpacer(errorCallback);

@@ -37,7 +37,7 @@ public class ConstructorTest<C, P extends IParamTypeSet> extends TestBase implem
     
     public String constructorToString()
     {
-        return Modifier.toString(modifiers) + " " + clazz.getClassName() + " (" + Arrays.stream(params.getParamTypes()).map(Class::getSimpleName).collect(Collectors.joining(", ")) + ")";
+        return Modifier.toString(modifiers) + " " + clazz.getClassName() + "(" + Arrays.stream(params.getParamTypes()).map(Class::getSimpleName).collect(Collectors.joining(", ")) + ")";
     }
     
     @Override

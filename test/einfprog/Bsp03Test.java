@@ -1,11 +1,11 @@
 package einfprog;
 
+import einfprog.test_engine.TestMaker;
 import einfprog.test_engine.output.Atom;
 import einfprog.test_engine.output.Compound;
 import einfprog.test_engine.params.ParamSet0;
 import einfprog.test_engine.params.ParamSet1;
 import einfprog.test_engine.params.ParamSet2;
-import einfprog.test_engine.TestMaker;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
@@ -150,7 +150,7 @@ public class Bsp03Test
                         .callMethod("isMaexchen", boolean.class, new ParamSet2<>(w1, w2))
                         .testValue(groessererWert(w1, w2) == 21)
                         .runTest();
-    
+                
                 TestMaker.builder()
                         .findClass("einfprog.Bsp03")
                         .statically()
