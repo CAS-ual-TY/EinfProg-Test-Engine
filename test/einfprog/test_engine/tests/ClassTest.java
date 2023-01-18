@@ -37,7 +37,7 @@ public class ClassTest<C> extends TestBase implements IClassGetter<C>
     {
         errorCallback.println("Can not find class:");
         Util.weakSpacer(errorCallback);
-        errorCallback.println(theClass.getCanonicalName());
+        errorCallback.println(clazz);
         Util.strongSpacer(errorCallback);
     }
     

@@ -1,6 +1,5 @@
 package einfprog.test_engine.tests;
 
-import einfprog.test_engine.Settings;
 import einfprog.test_engine.Util;
 import einfprog.test_engine.base.*;
 import einfprog.test_engine.params.IParamSet;
@@ -74,15 +73,7 @@ public class MethodInvokeTest<T, C, P extends IParamTypeSet> extends TestBase im
         
         errorCallback.println("Exception:");
         Util.weakSpacer(errorCallback);
-        if(Settings.PRINT_STACKTRACE_ON_ERROR)
-        {
-            e.getTargetException().printStackTrace(errorCallback);
-        }
-        else
-        {
-            errorCallback.println(e.getTargetException().getMessage());
-        }
-        
+        Util.writeExceptionToPW(errorCallback, e.getTargetException() == null ? e : e.getTargetException());
         Util.strongSpacer(errorCallback);
         
         appendFeedback(errorCallback);

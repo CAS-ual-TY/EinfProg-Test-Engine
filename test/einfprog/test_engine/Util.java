@@ -1,6 +1,8 @@
 package einfprog.test_engine;
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Objects;
@@ -321,5 +323,46 @@ public class Util
         errorCallback.println("Something went wrong... Please report this error.");
         weakSpacer(errorCallback);
         e.printStackTrace(errorCallback);
+    }
+    
+    public static void writeExceptionToPW(PrintWriter errorCallback, Throwable e)
+    {
+        try(StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw))
+        {
+            pw.println(e.getClass().getName() + (e.getMessage() != null ? (": " + e.getMessage()) : ""));
+            
+            if(Settings.PRINT_STACKTRACE_ON_ERROR)
+            {
+                String s0 = "";
+                for(StackTraceElement element : e.getStackTrace())
+                {
+                    String s = element.toString();
+                    
+                    if(s.contains("einfprog.test_engine"))
+                    {
+                        break;
+                    }
+                    else if(s.equals(s0))
+                    {
+                        // eg. recursive stack overflow
+                        pw.println("    " + s);
+                        pw.println("    " + s);
+                        break;
+                    }
+                    
+                    pw.println("    " + s);
+                    s0 = s;
+                }
+                
+                pw.println("    ...");
+                
+                s0 = sw.toString();
+                errorCallback.println(s0.substring(0, s0.length() - System.lineSeparator().length()));
+            }
+        }
+        catch(IOException ioException)
+        {
+        }
     }
 }
