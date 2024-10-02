@@ -12,6 +12,6 @@ public class Bsp00 {
     public static void main(String[] args) {
         
         // So wird eine Textzeile auf den Bildschirm gezaubert.
-        System.out.println("Hello World");
+        System.out.println("Hello World :-)");
     }
 }
