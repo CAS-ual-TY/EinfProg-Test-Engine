@@ -8,7 +8,7 @@ public class Bsp00Test
 {
     @Test
     public void test1() {
-        TestMaker.callMain("einfprog.Bsp00")
+        TestMaker.callMain("einfprog.Welt")
                 .expectConsoleOutput(Compound.construct("Hello World :-)"))
                 .runTest();
     }

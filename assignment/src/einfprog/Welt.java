@@ -1,4 +1,4 @@
-// Vorname Nachname, Matrikelnummer
+// Alan Turing, 12345678
 package einfprog;
 
 /*
@@ -6,7 +6,8 @@ package einfprog;
  */
 
 // Dateiname und Klassenname muessen gleich sein.
-public class Bsp00 {
+public class Welt
+{
     
     // Hier beginnt die Ausfuehrung des Programms.
     public static void main(String[] args) {
